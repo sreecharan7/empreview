@@ -5,20 +5,21 @@ import bodyParser from "body-parser";
 import { errorHandler } from "./src/middlewares/error.middleware.js";
 import ejsLayout from "express-ejs-layouts";
 import path from "path";
+import view from "./frontend/src/view.router.js"
 
 const app=express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-// app.use(ejsLayout);
-// app.use("view engine","ejs");
-// app.use("views",path.resolve("views","ejs"));
+app.use(ejsLayout);
+app.set('view engine','ejs');
+app.set('views',path.resolve("frontend","views"));
 
 
 
 app.use("/api/uesr",user);
-
+app.use("/",view);
 
 app.use(errorHandler);
 
