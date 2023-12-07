@@ -6,15 +6,25 @@ const companyModel=mongoose.model("company",companyschema);
 
 
 export class companyRepository{
-    add=async (companyName)=>{
+    add=async (companyName,userId)=>{
         try{
-            const newCompany=companyModel.create({companyName});
+            const newCompany=companyModel.create({companyName,userId});
             // await newCompany.save();
             return await newCompany;
         }
         catch(err){
-            console.log(err);
-           throw new customError(400,"something went wrong while creating the company");
+            if(err instanceof mongoose.Error.ValidationError){
+                let userSendErrors={};
+                for(const filed in err.errors){
+                    if (err.errors.hasOwnProperty(filed)){
+                        userSendErrors[filed]=err.errors[filed].message;
+                    }
+                }
+                throw new customError(400,userSendErrors);
+            }
+            else{
+                throw new customError(400,"something went wrong while creating the company");
+            }
         }
     }
     getCompanyByShortComapyId=async (shortCompanyId)=>{

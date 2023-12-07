@@ -30,8 +30,8 @@ export class requestRepository{
 
     findRequestUsingUserIdInCompany=async (userId,companyId)=>{
         try{
-            let user=await requestModel.findOne({userId,companyId});
-            return user
+            let count=await requestModel.countDocuments({userId,companyId});
+            return count;
         }
         catch(err){
             throw new customError(400,"something went wrong while searching for user");

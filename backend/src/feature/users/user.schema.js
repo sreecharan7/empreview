@@ -8,12 +8,15 @@ export const userSchema=mongoose.Schema({
     about:{type:"String",required:true},
     photo:{type:"String",required:true},
     banner:{type:"String",required:true},
+    connectionId:{type:"Number",required:true,default:0},
     time:{type:"Date",required:true,default:Date.now()},
 })
 
 userSchema.pre("save",async function (next){
     if(this.isNew){
         this.password=await bcrupt.hash(this.password,10);
+        const generatedRandomNumber = Math.floor(Math.random() * 100000000);
+        this.connectionId=generatedRandomNumber;
     }
     next();
 })

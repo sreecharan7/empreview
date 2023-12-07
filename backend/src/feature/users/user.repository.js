@@ -21,6 +21,9 @@ export class userRepository{
                 }
                 throw new customError(400,userSendErrors);
             }
+            else if(err.code===11000){
+                throw new customError(400,"the email is aldeary exist, please go for signin");
+            }
             else{
                 throw new customError(400,"something went wrong while creating the user");
             }
