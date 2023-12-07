@@ -11,6 +11,7 @@ export function errorHandler(err,req,res,next){
     }
     else{
         res.status(500).send({status:false,msg:"something wrong with the server"});
-        console.log(err);
     }
+    console.log(err);
+
 }

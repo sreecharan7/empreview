@@ -1,8 +1,8 @@
 import express from "express"
-import {connect} from "./src/database/config.js"
-import user from "./src/feature/users/user.router.js";
+import {connect} from "./backend/src/database/config.js"
+import user from "./backend/src/feature/users/user.router.js";
 import bodyParser from "body-parser";
-import { errorHandler } from "./src/middlewares/error.middleware.js";
+import { errorHandler } from "./backend/src/middlewares/error.middleware.js";
 import ejsLayout from "express-ejs-layouts";
 import path from "path";
 import view from "./frontend/src/view.router.js"
@@ -18,7 +18,7 @@ app.set('views',path.resolve("frontend","views"));
 
 
 
-app.use("/api/uesr",user);
+app.use("/api/user",user);
 app.use("/",view);
 
 app.use(errorHandler);

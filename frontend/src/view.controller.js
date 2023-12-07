@@ -1,4 +1,4 @@
-import {customError} from "../../src/middlewares/error.middleware.js"
+import {customError} from "../../backend/src/middlewares/error.middleware.js"
 
 export class viewController{
     home=async (req,res,next)=>{

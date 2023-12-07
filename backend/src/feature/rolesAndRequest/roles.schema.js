@@ -9,4 +9,4 @@ export const rolesSchema=new mongoose.Schema({
     time:{type:"Date",required:true,default:Date.now()}
 });
 
-rolesSchema.index({userId:1,companyid:1},{unique:true});
+rolesSchema.index({userId:1,companyId:1},{unique:true});

@@ -29,12 +29,16 @@ export class userController {
     }
     addNewRole=async (req,res,next)=>{
         try{
+        //triming for the all elements for the req.body
+        for(const key in req.body){
+           req.body[key]=req.body[key].trim();
+        }
         const {companyName,role, companyId}=req.body;
         const {userId}=req.body;
         if(role==="admin"){
             let company=await this.companyRepository.add(companyName);
             let admin=await this.rolesRepository.addNewRole(role,userId,company._id,companyName);
-            company.admin=admin._id;
+            company.adminId=admin._id;
             company.save();
             res.status(201).send({status:true,msg:"created organisation sucessfully, you are the admin"});
         }
