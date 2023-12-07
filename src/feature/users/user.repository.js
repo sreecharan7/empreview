@@ -1,0 +1,38 @@
+import mongoose from "mongoose"
+import { userSchema } from "./user.schema.js"
+import { customError } from "../../middlewares/error.middleware.js";
+
+const userModel=mongoose.model("users",userSchema);
+
+export class userRepository{
+    addUser=async (email,password,name,about,photo,banner)=>{
+        try{
+            const newUser=await userModel.create({email,password,name,about,photo,banner});
+            await newUser.save();
+            return newUser;
+        }
+        catch(err){
+            if(err instanceof mongoose.Error.ValidationError){
+                let userSendErrors={};
+                for(const filed in err.errors){
+                    if (err.errors.hasOwnProperty(filed)){
+                        userSendErrors[filed]=err.errors[filed].message;
+                    }
+                }
+                throw new customError(400,userSendErrors);
+            }
+            else{
+                throw new customError(400,"something went wrong while creating the user");
+            }
+        }
+    }
+    findUserByEmail=async (email)=>{
+        try{
+            const user=await userModel.findOne({email});
+            return user;
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while picking up the user");
+        }
+    }
+}

@@ -1,0 +1,22 @@
+.custom-card {
+    transition: box-shadow 0.3s; 
+}
+
+.custom-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+/* .custom-card:hover #highlight-text {
+    background-image: linear-gradient(to right, yellow 50%, transparent 50%);
+    background-size: 200% 100%;
+    transition: background-position 0.5s ease-in-out;
+} */
+body {
+    background-image: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%);
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    min-height: 100vh;
+}
+.glass{
+background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 255, 255, 0.4));
+}
