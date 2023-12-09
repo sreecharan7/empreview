@@ -4,6 +4,10 @@ import { rolesRepository } from "../rolesAndRequest/roles.repository.js";
 import { customError } from "../../middlewares/error.middleware.js";
 import { userRepository } from "./user.repository.js";
 import bycrpt from "bcrypt"
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export class userController {
     constructor(){
@@ -18,8 +22,12 @@ export class userController {
             for(const key in req.body){
                 if (typeof req.body[key] === 'string') {req.body[key]=req.body[key].trim();}
             }
-            const {email,password,name,about,photo,banner}=req.body;
-            await this.userRepository.addUser(email,password,name,about,photo,banner);
+            const {email,password,name,about}=req.body;
+            let {photo,banner}=req.files;
+            let photoPath,bannerpath,photoOriginalName,bannerOriginalName;
+            if(photo){photoPath=photo[0].path.replace(/^public\\/, '');;photoOriginalName=photo[0].originalname;}
+            if(banner){bannerpath=banner[0].path.replace(/^public\\/, '');;bannerOriginalName=banner[0].originalname;}
+            await this.userRepository.addUser(email,password,name,about,photoPath,bannerpath,photoOriginalName,bannerOriginalName);
             res.status(201).send({status:true,msg:"user created sucessfully"});
         }catch(err){
             next(err);
@@ -38,7 +46,7 @@ export class userController {
         if(role==="admin"){
             let company=await this.companyRepository.add(companyName,userId);
             let admin=await this.rolesRepository.addNewRole(role,userId,company._id,companyName);
-            company.adminId=admin._id;
+            company.adminId.push(admin._id);
             company.save();
             res.status(201).send({status:true,msg:"created organisation sucessfully, you are the admin"});
         }
@@ -66,16 +74,21 @@ export class userController {
     login=async (req,res,next)=>{
         try{
         let {email,password}=req.body;
+        if(!email||!password){
+            throw new customError(400,"please provide the information about email or password");
+        }
         email=email.trim();
         password=password.trim();
         const user=await this.userRepository.findUserByEmail(email);
         if(!user){
-            throw new customError(400,"user doesnot exist");
+            throw new customError(400,"user doesnot exist, check the email");
         }
         if(!await bycrpt.compare(password,user.password)){
             throw new customError(400,"password was wrong");
         }
         //what ever you do login sucessfull;
+        var token=jwt.sign({user:user._id,ConnectionId:user.ConnectionId}, process.env.jwt, { expiresIn: 60 * 60 });
+        res.cookie("usercredentails",token,{maxAge:1000*60*60})
         res.status(200).send({status:true,msg:"login sucessfull"});
         }
         catch(err){

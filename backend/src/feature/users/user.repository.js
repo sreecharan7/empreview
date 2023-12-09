@@ -5,9 +5,9 @@ import { customError } from "../../middlewares/error.middleware.js";
 const userModel=mongoose.model("users",userSchema);
 
 export class userRepository{
-    addUser=async (email,password,name,about,photo,banner)=>{
+    addUser=async (email,password,name,about,photoPath,bannerPath,photoOriginalName,bannerOriginalName)=>{
         try{
-            const newUser=await userModel.create({email,password,name,about,photo,banner});
+            const newUser=await userModel.create({email,password,name,about,photoPath,bannerPath,photoOriginalName,bannerOriginalName});
             await newUser.save();
             return newUser;
         }
@@ -22,7 +22,7 @@ export class userRepository{
                 throw new customError(400,userSendErrors);
             }
             else if(err.code===11000){
-                throw new customError(400,"the email is aldeary exist, please go for signin");
+                throw new customError(400,"the email is aldeary exist,please choose another","email");
             }
             else{
                 throw new customError(400,"something went wrong while creating the user");

@@ -5,7 +5,7 @@ export const companyschema=new mongoose.Schema({
     shortCompanyId:{type:"Number",required:true,unique:true,default:0},
     noOfEmployee:{type:"Number",required:true,default:0},
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"users",require:true},
-    adminId:{type:mongoose.Schema.Types.ObjectId,ref:"roles",require:true},
+    adminId:{type:[mongoose.Schema.Types.ObjectId],ref:"roles",require:true,default:[]},
     time:{type:"Date",required:true,default:Date.now()}
 });
 

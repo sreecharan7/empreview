@@ -6,8 +6,10 @@ export const userSchema=mongoose.Schema({
     password:{type:"String",required:true},
     name:{type:"String",required:true,index:true},
     about:{type:"String",required:true},
-    photo:{type:"String",required:true},
-    banner:{type:"String",required:true},
+    photoPath:{type:"String",required:true,default:"website/default-photo.svg"},
+    bannerPath:{type:"String",required:true,default:"website/default-photo.svg"},
+    photoOriginalName:{type:"String",required:true,default:"default-photo.svg"},
+    bannerOriginalName:{type:"String",required:true,default:"default-photo.svg"},
     connectionId:{type:"Number",required:true,default:0},
     time:{type:"Date",required:true,default:Date.now()},
 })
