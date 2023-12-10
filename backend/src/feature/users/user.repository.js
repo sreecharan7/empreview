@@ -38,4 +38,84 @@ export class userRepository{
             throw new customError(400,"something went wrong while picking up the user");
         }
     }
+    confirmUserIdUsingConnectinId=async (userId,connectionId)=>{
+        try{
+            const user=await userModel.findById(userId);
+            if(!user){
+                throw new customError(400,"given the wrong credentials");
+            }
+            if(user.connectionId==connectionId){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(err){
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while picking up the user")
+            }
+        }
+    }
+    changeConnectionId=async (userId)=>{
+        try{
+            const user=await userModel.findById(userId);
+            if(!user){
+                throw new customError(400,"given the wrong credentials");
+            }
+            let generatedRandomNumber = Math.floor(Math.random() * 100000000);
+            while(user.connectionId==generatedRandomNumber){
+                generatedRandomNumber = Math.floor(Math.random() * 100000000);
+            }
+            user.connectionId=generatedRandomNumber;
+            user.save();
+        }catch(err){
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while doing logout");
+            }
+        }
+    }
+    ToogleEmailVerify =async (email,emailVerified)=>{
+        try{
+            const user=await userModel.findOne({email:email});
+            if(!user){
+                throw new customError(400,"email is not found, please go for signin")
+            }
+            user.verified=emailVerified;
+            user.save();
+        }catch(err){
+            console.log(err);
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong with email");
+            }
+        }
+    }
+    resetPassword=async (email,password)=>{
+        try{
+            const user=await userModel.findOne({email:email});
+            if(!user){
+                throw new customError(400,{status:true,msg:"email is not found, please go for signin"})
+            }
+            user.verified=true;
+            user.password=password;
+            let generatedRandomNumber = Math.floor(Math.random() * 100000000);
+            while(user.connectionId==generatedRandomNumber){
+                generatedRandomNumber = Math.floor(Math.random() * 100000000);
+            }
+            user.connectionId=generatedRandomNumber;
+            user.save();
+        }catch(err){
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while changing password");
+            }
+        }
+    }
 }

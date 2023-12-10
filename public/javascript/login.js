@@ -1,9 +1,13 @@
+
 const fin= document.getElementById("form-login");
 const submitButton=document.getElementById("submit-button");
 const checkBox=document.getElementById("flexCheckDefault");
 const wholePageMessageShower=document.getElementById("message-shower");
+const emailInput=document.getElementsByName("email");
+const passwordInput=document.getElementsByName("password");
+const forgotPasswordLink=document.getElementById("forgot-password-link");
 
-function formSubmission(event){
+async function formSubmission(event){
     event.preventDefault();
     var formData= new FormData(this);
     //checking for checkbox is checked or not
@@ -46,3 +50,28 @@ function formSubmission(event){
 
 fin.addEventListener("submit",formSubmission);
 
+//query reader
+
+const urlParams = new URLSearchParams(window.location.search);
+
+const email= urlParams.get("email");
+const password= urlParams.get("password");
+
+if(email&&password&&emailInput&&passwordInput&&emailInput[0]&&passwordInput[0]){
+    emailInput[0].value=email;
+    passwordInput[0].value=password;
+}
+
+//a redirection to the forgot password
+
+function redirectionForgotPassword(){
+    // console.log(emailInput[0].value)
+    if(emailInput[0].value){
+        window.location.replace(`/forgot-password?email=${emailInput[0].value}`);
+    }
+    else{
+        window.location.replace(`/forgot-password`);
+    }
+}
+
+forgotPasswordLink.addEventListener("click",redirectionForgotPassword);

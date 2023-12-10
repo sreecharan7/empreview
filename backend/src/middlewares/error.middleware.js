@@ -1,15 +1,15 @@
 export class customError extends Error{
     constructor(statuscode,message,key="msg"){
-        super(key);
+        super(message);
         this.statuscode=statuscode;
-        this.message2=message;
+        this.key=key;
     }
 }
 
 export function errorHandler(err,req,res,next){
     if(err instanceof customError){
         let send={status:false}
-        send[err.message]=err.message2;
+        send[err.key]=err.message;
         res.status(err.statuscode).send(send);
     }
     else{

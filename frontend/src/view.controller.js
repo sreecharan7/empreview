@@ -25,4 +25,20 @@ export class viewController{
             throw new customError(400,"something went wrong while rendering the sigin page");
         }
     }
+    forgotPassword=async (req,res,next)=>{
+        try{
+            await res.render("forgotPassword",{title:"forgot password",javascript:`<script type="text/javascript" src="./javascript/forgotPassword.js" ></script>`});
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while rendering the forgot-password page");
+        }
+    }
+    termsAndCondition=async (req,res,next)=>{
+        try{
+            await res.render("termsAndConditions",{title:"terms and condition",javascript:null});
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while rendering the terms and condition");
+        }
+    }
 }

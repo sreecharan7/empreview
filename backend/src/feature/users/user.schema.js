@@ -12,6 +12,7 @@ export const userSchema=mongoose.Schema({
     bannerOriginalName:{type:"String",required:true,default:"default-photo.svg"},
     connectionId:{type:"Number",required:true,default:0},
     time:{type:"Date",required:true,default:Date.now()},
+    verified:{type:"Boolean",required:true,default:false}
 })
 
 userSchema.pre("save",async function (next){

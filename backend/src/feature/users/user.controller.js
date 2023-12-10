@@ -78,6 +78,7 @@ export class userController {
             throw new customError(400,"please provide the information about email or password");
         }
         email=email.trim();
+        password=String(password);
         password=password.trim();
         const user=await this.userRepository.findUserByEmail(email);
         if(!user){
@@ -87,13 +88,23 @@ export class userController {
             throw new customError(400,"password was wrong");
         }
         //what ever you do login sucessfull;
-        var token=jwt.sign({user:user._id,ConnectionId:user.ConnectionId}, process.env.jwt, { expiresIn: 60 * 60 });
-        res.cookie("usercredentails",token,{maxAge:1000*60*60})
+        var token=jwt.sign({user:user._id,connectionId:user.connectionId}, process.env.jwt, { expiresIn: 60 * 60 });
+        res.cookie(process.env.cookieNameUserCredientails,token,{maxAge:1000*60*60})
         res.status(200).send({status:true,msg:"login sucessfull"});
         }
         catch(err){
             next(err);
             console.log(err);
+        }
+    }
+    logoutFromAllDevices=async (req,res,next)=>{
+        try{
+            const {userId,connectionId}=req.userData;
+            await this.userRepository.changeConnectionId(userId,connectionId);
+            res.cookie(process.env.cookieNameUserCredientails,'',{expires:new Date(0)});
+            res.json({status:true,msg:"logout from all device sucessfull"});
+        }catch(err){
+            next(err);
         }
     }
 }

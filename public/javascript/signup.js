@@ -62,7 +62,7 @@ function formSubmission(event){
                 console.log("sucess");
                 var box=`<div class="alert alert-success" role="alert">${response["msg"]}. redirecting to login page...</div>`
                 wholePageMessageShower.innerHTML=box;
-                setTimeout(function(){window.location.replace('/login');},3000)
+                setTimeout(function(){window.location.replace(`/login?email=${formData.get("email")}&password=${formData.get("password")}`);},3000)
             }
             else{
                 if(response["email"]){
