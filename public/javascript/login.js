@@ -19,6 +19,8 @@ async function formSubmission(event){
         checkBox.classList.remove('is-invalid');
     }
     //verifying the data
+    //clearing error box
+    wholePageMessageShower.innerHTML='';
     //disabling the button
     submitButton.disabled=true;
     var xhr = new XMLHttpRequest();

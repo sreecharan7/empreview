@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import { userSchema } from "./user.schema.js"
 import { customError } from "../../middlewares/error.middleware.js";
+import bcrupt from "bcrypt";
 
 const userModel=mongoose.model("users",userSchema);
 
@@ -22,7 +23,7 @@ export class userRepository{
                 throw new customError(400,userSendErrors);
             }
             else if(err.code===11000){
-                throw new customError(400,"the email is aldeary exist,please choose another","email");
+                throw new customError(400,"the email is provied already exist,please choose another","email");
             }
             else{
                 throw new customError(400,"something went wrong while creating the user");
@@ -103,6 +104,7 @@ export class userRepository{
                 throw new customError(400,{status:true,msg:"email is not found, please go for signin"})
             }
             user.verified=true;
+            password=await bcrupt.hash(String(password),10);
             user.password=password;
             let generatedRandomNumber = Math.floor(Math.random() * 100000000);
             while(user.connectionId==generatedRandomNumber){

@@ -53,6 +53,8 @@ function formSubmission(event){
     }
     //disabling the submit button
     submitButton.disabled =true;
+    //clearing error box
+    wholePageMessageShower.innerHTML='';
     //sending the data to client
     xhr.open("POST","/api/user/sigin",true);
     xhr.onreadystatechange=function(){

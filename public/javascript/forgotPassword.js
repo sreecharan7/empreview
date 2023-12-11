@@ -33,7 +33,8 @@ function formSubmissionEmail(event){
     //disabing the button
     const submitButton=this.querySelector(".btn");
     submitButton.disabled=true;
-
+    //clearing error message block
+    wholePageMessageShower.innerHTML='';
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     var serializedData = new URLSearchParams(formData).toString();
     xhr.onreadystatechange = function () {

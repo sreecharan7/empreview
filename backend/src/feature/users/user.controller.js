@@ -107,4 +107,12 @@ export class userController {
             next(err);
         }
     }
+    logout=async (req,res,next)=>{
+        try{
+            res.cookie(process.env.cookieNameUserCredientails,'',{expires:new Date(0)});
+            res.json({status:true,msg:"logout from this device sucessfull"});
+        }catch(err){
+            next(err);
+        }
+    }
 }

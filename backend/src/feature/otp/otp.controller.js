@@ -1,6 +1,5 @@
 import {otpRepository} from "./otp.repository.js"
 import {userRepository}from "../users/user.repository.js"
-import bcrupt from "bcrypt";
 import { customError } from "../../middlewares/error.middleware.js";
 
 const userRep=new userRepository();
@@ -44,7 +43,6 @@ export class otpController{
             }
             const otpData=await this.otpRepository.verify(email,parseInt(otp));
             if(otpData){
-                password=await bcrupt.hash(String(password),10);
                 await userRep.resetPassword(email,password);
                 res.json({status:true,msg:"password reset successfully"});}
             else{
