@@ -10,7 +10,6 @@ const userC=new userController();
 
 app.get("/authorization-check",authorization,(req,res,next)=>{res.json({status:true,msg:"authorized sucessfully"});});
 
-app.post("/a",(req,res,next)=>{userC.addNewRole(req,res,next)});
 app.post("/sigin",upload.fields([{name:"photo",maxCount:1},{name:"banner",maxCount:1}]),(req,res,next)=>{userC.addNewUser(req,res,next)});
 app.post("/login",(req,res,next)=>{userC.login(req,res,next)});
 

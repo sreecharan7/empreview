@@ -15,12 +15,7 @@ export class companyRepository{
         catch(err){
             if(err instanceof mongoose.Error.ValidationError){
                 let userSendErrors={};
-                for(const filed in err.errors){
-                    if (err.errors.hasOwnProperty(filed)){
-                        userSendErrors[filed]=err.errors[filed].message;
-                    }
-                }
-                throw new customError(400,userSendErrors);
+                throw new customError(400,"company name is is aldready exist with your account");
             }
             else{
                 throw new customError(400,"something went wrong while creating the company");

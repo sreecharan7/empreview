@@ -1,6 +1,12 @@
 export class customError extends Error{
     constructor(statuscode,message,key="msg"){
-        super(message);
+        console.log("came");
+        if (typeof(message)=="object"){
+            super("object");
+            this.object=message;
+        }else{
+            super(message);
+        }
         this.statuscode=statuscode;
         this.key=key;
     }
@@ -9,7 +15,8 @@ export class customError extends Error{
 export function errorHandler(err,req,res,next){
     if(err instanceof customError){
         let send={status:false}
-        send[err.key]=err.message;
+        if(err.message=="object"){send[err.key]=err["object"];}
+        else{send[err.key]=err.message};
         res.status(err.statuscode).send(send);
     }
     else{

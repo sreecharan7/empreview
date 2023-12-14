@@ -6,6 +6,7 @@ export const companyschema=new mongoose.Schema({
     noOfEmployee:{type:"Number",required:true,default:0},
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"users",require:true},
     adminId:{type:[mongoose.Schema.Types.ObjectId],ref:"roles",require:true,default:[]},
+    about:{type:"String",require:true,default:""},
     time:{type:"Date",required:true,default:Date.now()}
 });
 

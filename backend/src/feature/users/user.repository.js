@@ -46,7 +46,7 @@ export class userRepository{
                 throw new customError(400,"given the wrong credentials");
             }
             if(user.connectionId==connectionId){
-                return true;
+                return user;
             }
             else{
                 return false;

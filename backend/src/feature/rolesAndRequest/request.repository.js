@@ -37,4 +37,17 @@ export class requestRepository{
             throw new customError(400,"something went wrong while searching for user");
         }
     }
+    dataOfUserRequests=async (userId)=>{
+        try{
+            const roles=requestModel.find({userId},{userId:0,"__v":0});
+            return roles;
+        }
+        catch(err){
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while computing the roles")
+            }
+        }
+    }
 }

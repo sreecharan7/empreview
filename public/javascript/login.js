@@ -36,7 +36,7 @@ async function formSubmission(event){
                 console.log("sucess");
                 var box=`<div class="alert alert-success" role="alert">${response["msg"]}. redirecting to home page...</div>`
                 wholePageMessageShower.innerHTML=box;
-                setTimeout(function(){window.location.replace('/');},2000)
+                setTimeout(function(){window.location.replace('/v');},2000)
             }
             else{
                 var box=`<div class="alert alert-danger" role="alert">${response["msg"]}</div>`

@@ -3,42 +3,50 @@ import { customError } from "../middlewares/error.middleware.js";
 export class viewController{
     home=async (req,res,next)=>{
         try{
-            await res.render("home",{title:"home",javascript:null});
+            await res.render("home",{title:"Home",javascript:null});
         }
         catch(err){
-            throw new customError(400,"something went wromng whille loading the home page");
+            next(err);
         }
     }
     login=async (req,res,next)=>{
         try{
-           await res.render("login",{title:"login",javascript:`<script type="text/javascript" src="./javascript/login.js" ></script>`});
+           await res.render("login",{title:"Login",javascript:`<script type="text/javascript" src="./javascript/login.js" ></script>`});
         }
         catch(err){
-            throw new customError(400,"something went wrong while rendering the login page");
+            next(err);
         }
     }
     signup=async (req,res,next)=>{
         try{
-            await res.render("signup",{title:"sign",javascript:`<script type="text/javascript" src="./javascript/signup.js" ></script>`});
+            await res.render("signup",{title:"Sign",javascript:`<script type="text/javascript" src="./javascript/signup.js" ></script>`});
         }
         catch(err){
-            throw new customError(400,"something went wrong while rendering the sigin page");
+            next(err);
         }
     }
     forgotPassword=async (req,res,next)=>{
         try{
-            await res.render("forgotPassword",{title:"forgot password",javascript:`<script type="text/javascript" src="./javascript/forgotPassword.js" ></script>`});
+            next(err);
         }
         catch(err){
-            throw new customError(400,"something went wrong while rendering the forgot-password page");
+            next(err);
         }
     }
     termsAndCondition=async (req,res,next)=>{
         try{
-            await res.render("termsAndConditions",{title:"terms and condition",javascript:null});
+            await res.render("termsAndConditions",{title:"Terms and condition",javascript:null});
         }
         catch(err){
-            throw new customError(400,"something went wrong while rendering the terms and condition");
+            next(err);
+        }
+    }
+    MyaccountView=async (req,res,next)=>{
+        try{
+            await res.render("myAccountView",{title:"Home",javascript:`<script type="text/javascript" src="./javascript/myAccountView.js" ></script>`,name:req.userData.name});
+        }
+        catch(err){
+            next(err);
         }
     }
 }
