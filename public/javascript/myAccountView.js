@@ -4,10 +4,17 @@
 function createOrganisationModelSetter(){
     modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Create the organisation</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
-    modalBody.innerHTML=`<div id="model-message-shower"></div><div class="row g-3"><div class="col-auto"><label for="organisationName">Organisation name :-</label></div>
+    modalBody.innerHTML=`<div id="model-message-shower"></div><div class="row g-3"><div class="col-auto" id="form-data"><label for="organisationName">Organisation name :-</label></div>
         <div class="col-auto">
           <input type="text" class="form-control" id="organisationName" placeholder="Organisation name">
         </div>
+        <div class="col-auto input-group">
+                <label for="organisationName">About organiation :- </label>
+                <textarea class="form-control" aria-label="With textarea" placeholder="About organisation" name="about" id="aboutOrganisation" required></textarea>
+                <div class="invalid-tooltip">
+                    please provide about section
+                </div>
+            </div>
     </div>`;
     modalFooter.innerHTML=`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     <button type="button" class="btn btn-primary" id="create-organisation-submit" onClick="createSubmit(this)">Submit</button>`;
@@ -21,6 +28,13 @@ function createrequestModelSetter(){
         <div class="col-auto">
           <input type="number" class="form-control" id="organisationId" placeholder="Organisation Id">
         </div>
+        <div class="col-auto input-group">
+        <label for="organisationName">note :- </label>
+        <textarea class="form-control" aria-label="With textarea" placeholder="note to the organisation about request (optional)" name="about" id="note" required></textarea>
+        <div class="invalid-tooltip">
+            please provide about section
+        </div>
+    </div>
     </div>`;
     modalFooter.innerHTML=`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     <button type="button" class="btn btn-primary" id="create-request-submit" onClick="createSubmit(this)">Submit</button>`;
@@ -31,24 +45,26 @@ function createrequestModelSetter(){
 function createSubmit(element){
     const modelMessgeShower=document.getElementById("model-message-shower");
     modelMessgeShower.innerHTML='';
-    let inputBox,formData;
+    let inputBox,formData,textArea;
     if(element.id=="create-organisation-submit"){
-        inputBox=document.getElementById("organisationName");
-        if(inputBox.value==''||inputBox.value.trim()==''){
-            var box=`<div class="alert alert-danger" role="alert">Input cannot be empty</div>`
+        inputBox=modalBody.querySelector("#organisationName");
+        textArea=modalBody.querySelector("#aboutOrganisation");
+        if(inputBox.value==''||inputBox.value.trim()==''||textArea.value==''||textArea.value.trim()==''){
+            var box=`<div class="alert alert-danger" role="alert">Input cannot be empty, maybe organisation name or the about is empty</div>`
             modelMessgeShower.innerHTML=box;
             return;
         }
-        formData={companyName:inputBox.value,role:"admin"};
+        formData={companyName:inputBox.value,about:textArea.value,role:"admin"};
     }
     else{
         inputBox=document.getElementById("organisationId");
+        textArea=modalBody.querySelector("#note");
         if(inputBox.value<=0){
             var box=`<div class="alert alert-danger" role="alert">Input value should be greater than 0</div>`
             modelMessgeShower.innerHTML=box;
             return;  
         }
-        formData={companyId:inputBox.value,role:"employee"};
+        formData={companyId:inputBox.value,role:"employee",note:textArea.value};
     }
     //disabling the button
     element.disabled=true;
@@ -67,6 +83,8 @@ function createSubmit(element){
                 modelMessgeShower.innerHTML=box;
                 inputBox.disabled=true;
                 inputBox.readonly=true;
+                textArea.disabled=true;
+                textArea.readonly=true;
             }
             else{
                 var box=`<div class="alert alert-danger" role="alert">${response["msg"]}</div>`

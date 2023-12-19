@@ -39,7 +39,7 @@ export class requestRepository{
     }
     dataOfUserRequests=async (userId)=>{
         try{
-            const roles=requestModel.find({userId},{userId:0,"__v":0});
+            const roles=await requestModel.find({userId},{userId:0,"__v":0});
             return roles;
         }
         catch(err){

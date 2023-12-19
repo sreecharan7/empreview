@@ -15,7 +15,7 @@ export class companyRepository{
         catch(err){
             if(err instanceof mongoose.Error.ValidationError){
                 let userSendErrors={};
-                throw new customError(400,"company name is is aldready exist with your account");
+                throw new customError(400,"organisation name is is aldready exist with your account");
             }
             else{
                 throw new customError(400,"something went wrong while creating the company");
@@ -45,6 +45,15 @@ export class companyRepository{
         }
         catch(err){
             throw new customError(400,"something went wrong while changing the emplyoees");
+        }
+    }
+    getTheDataUsingCompanyId=async (companyId)=>{
+        try{
+            let company=await companyModel.findById(companyId,"shortCompanyId companyName noOfEmployee time");
+            if(!company){throw new customError(400,"Company not found with the company id");}
+            return company;
+        }catch(err){
+            throw new customError(400,"something went wrong while computing the company about");
         }
     }
 }

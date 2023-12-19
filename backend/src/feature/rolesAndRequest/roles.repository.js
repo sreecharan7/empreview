@@ -44,7 +44,7 @@ export class rolesRepository{
     }
     dataOfUserRoles=async (userId)=>{
         try{
-            const roles=rolesModel.find({userId},{userId:0,"__v":0}).sort({ time: -1 });
+            const roles=await rolesModel.find({userId},{userId:0,"__v":0}).sort({ time: -1 });
             return roles;
         }
         catch(err){
@@ -53,6 +53,25 @@ export class rolesRepository{
             }else{
                 throw new customError(400,"something went wrong while computing the roles")
             }
+        }
+    }
+    checkUserIdToAdminId=async (userId,companyId)=>{
+        try{
+            const company=await rolesModel.findOne({userId,companyId});
+            if(company){
+                if(company.role=="admin"||company.role=="both"){
+                    return company;
+                }
+                else{
+                    return null;
+                }
+            }
+            else{
+                return null;
+            }
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while computing");
         }
     }
 }

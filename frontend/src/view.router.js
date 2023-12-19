@@ -12,7 +12,6 @@ app.get("/",(req,res,next)=>{
 }
 ,(req,res,next)=>{
     if(req.userData){
-        console.log(req.userData);
         res.redirect("/v");
     }else{
         viewC.home(req,res,next)
@@ -24,6 +23,7 @@ app.get("/forgot-password",(req,res,next)=>{viewC.forgotPassword(req,res,next)})
 app.get("/terms-and-conditions",(req,res,next)=>{viewC.termsAndCondition(req,res,next)});
 
 app.get("/v",authorization,(req,res,next)=>{viewC.MyaccountView(req,res,next)});
+app.get("/v/a/:id",authorization,(req,res,next)=>{viewC.adminView(req,res,next)});
 
 app.use((req,res,next)=>{res.render("404",{javascript:null,title:"Page not found"})});
 

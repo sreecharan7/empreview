@@ -1,6 +1,15 @@
-import { customError } from "../middlewares/error.middleware.js";
+import { requestToBackend } from "./requsetToBackend.repository.js";
+
+const isValidObjectId = (id) => {
+    const objectIdPattern = /^[0-9a-fA-F]{24}$/;  
+    return objectIdPattern.test(id);
+};
 
 export class viewController{
+    constructor(){
+        this.requestToBackend=new requestToBackend();
+    }
+
     home=async (req,res,next)=>{
         try{
             await res.render("home",{title:"Home",javascript:null});
@@ -27,7 +36,7 @@ export class viewController{
     }
     forgotPassword=async (req,res,next)=>{
         try{
-            next(err);
+            await res.render("forgotPassword",{title:"forgot password",javascript:`<script type="text/javascript" src="./javascript/forgotPassword.js" ></script>`});
         }
         catch(err){
             next(err);
@@ -44,6 +53,24 @@ export class viewController{
     MyaccountView=async (req,res,next)=>{
         try{
             await res.render("myAccountView",{title:"Home",javascript:`<script type="text/javascript" src="./javascript/myAccountView.js" ></script>`,name:req.userData.name});
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    adminView=async (req,res,next)=>{
+        try{
+            if(!isValidObjectId(req.params.id)){
+                res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            let companyName=await this.requestToBackend.checkTheCompanyToUserIdToAdmin(req.userData.userId,req.params.id);
+            if(companyName){
+                await res.render("adminView",{title:"Company",javascript:null,companyName:companyName});
+            }
+            else{
+                res.redirect("/404");
+            }
         }
         catch(err){
             next(err);
