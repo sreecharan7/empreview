@@ -74,4 +74,22 @@ export class rolesRepository{
             throw new customError(400,"something went wrong while computing");
         }
     }
+    
+    findRoleUsingUserIdInCompany=async (userId,companyId)=>{
+        try{
+            let count=await rolesModel.countDocuments({userId,companyId});
+            return count;
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while searching for user");
+        }
+    }
+    changeCompanyNameToCompanyId=async(companyName,companyId)=>{
+        try{
+            await rolesModel.updateMany({companyId},{$set:{companyName}});
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while changing the name");
+        }
+    }
 }

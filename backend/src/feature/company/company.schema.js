@@ -28,5 +28,6 @@ companyschema.pre("save",async function(next){
 
 companyschema.path("userId").validate(async function(value){
     const count =await this.constructor.countDocuments({userId:value,companyName:this.companyName});
-    return !count;
+    if(count&&count>1){return false}
+    return true;
 })

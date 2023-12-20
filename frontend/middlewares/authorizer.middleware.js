@@ -16,6 +16,9 @@ export async function authorization(req,res,next){
                 req.userData={};
                 req.userData.userId=user._id;
                 req.userData.name=user.name;
+                if(req["StoreCokkieData"]){
+                    req.userData.cookieData=data;
+                }
                 next();
             }
             else{
@@ -36,7 +39,6 @@ export async function authorization(req,res,next){
         else{
             if(req["goNext"]){next();}
             else{
-                console.log("came");
                 await res.render("access-denied",{title:"Acess denied",javascript:null})
             }
         }

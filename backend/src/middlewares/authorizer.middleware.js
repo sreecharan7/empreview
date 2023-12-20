@@ -16,6 +16,10 @@ export async function authorization(req,res,next){
                 req.userData={};
                 req.userData.userId=data.user;
                 req.userData.connectionId=data.connectionId;
+                if (data["companyId"]&&data["role"]){
+                    req.userData.companyId=data["companyId"];
+                    req.userData.role=data["role"];
+                }
                 next();
             }
             else{

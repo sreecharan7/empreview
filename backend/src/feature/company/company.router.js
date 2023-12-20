@@ -7,5 +7,6 @@ const companyC=new companyController();
 const app=express.Router();
 
 app.get("/about",(req,res,next)=>{companyC.getCompanyDetails(req,res,next);})
+app.put("/companyDetails",authorization,(req,res,next)=>{companyC.UpdateCompanyDetails(req,res,next)});
 
 export default app;

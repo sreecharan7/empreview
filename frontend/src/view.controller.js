@@ -1,4 +1,5 @@
 import { requestToBackend } from "./requsetToBackend.repository.js";
+import jwt from "jsonwebtoken";
 
 const isValidObjectId = (id) => {
     const objectIdPattern = /^[0-9a-fA-F]{24}$/;  
@@ -66,7 +67,11 @@ export class viewController{
             }
             let role=await this.requestToBackend.checkTheCompanyToUserIdToAdmin(req.userData.userId,req.params.roleId);
             if(role){
-                await res.render("adminViewHome",{title:"Company",javascript:null,companyName:role.companyName,companyId:role.companyId,roleId:role._id});
+                req.userData.cookieData["companyId"]=role.companyId;
+                req.userData.cookieData["role"]=role.role;
+                var token=jwt.sign(req.userData.cookieData, process.env.jwt);
+                res.cookie(process.env.cookieNameUserCredientails,token,{maxAge: parseInt(process.env.expoireOfCookieUserCredientails)});
+                await res.render("adminViewHome",{title:"Company",javascript:null,companyName:role.companyName});
             }
             else{
                 res.redirect("/404");

@@ -46,8 +46,8 @@ export class userController {
             throw new customError(400,"password was wrong");
         }
         //what ever you do login sucessfull;
-        var token=jwt.sign({user:user._id,connectionId:user.connectionId}, process.env.jwt, { expiresIn: 60 * 60 });
-        res.cookie(process.env.cookieNameUserCredientails,token,{maxAge:1000*60*60})
+        var token=jwt.sign({user:user._id,connectionId:user.connectionId}, process.env.jwt);
+        res.cookie(process.env.cookieNameUserCredientails,token,{maxAge: parseInt(process.env.expoireOfCookieUserCredientails)});
         res.status(200).send({status:true,msg:"login sucessfull"});
         }
         catch(err){

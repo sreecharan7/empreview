@@ -1,4 +1,4 @@
-import {companyRepository} from "../../backend/src/feature/admin/company.repository.js"
+import {companyRepository} from "../../backend/src/feature/company/company.repository.js"
 import {rolesRepository} from "../../backend/src/feature/rolesAndRequest/roles.repository.js";
 
 export class requestToBackend{

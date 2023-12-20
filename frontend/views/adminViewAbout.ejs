@@ -1,0 +1,56 @@
+<div class="container mt-3">
+    <div class="d-flex justify-content-between">
+        <div>
+            <a href="../">
+                <i class="fa-solid fa-arrow-left"> Back</i>
+            </a>
+        </div>
+        <div>
+            <div class="input-group mb-3 d-flex justify-content-center align-items-center " style="width: auto;">
+                <input type="file" id="photo-input" class="d-none" accept="image/*" name="photo">
+                <abbr title="photo of the company (optional)" class="initialism text-decoration-none">
+                <label for="photo-input" class="rounded-circle d-flex justify-content-end  border border-white" style="height: 200px; width: 200px; background-color: #dadde2;">
+                    <i class="fa-regular fa-pen-to-square fa-2xl position-absolute" style="color: #747c8b; margin-top: 20px; margin-right: 10px;"></i>
+                    <img id="photo-preview" class="rounded-circle " style="height: 100%;width: 100%;" src="../images/photos/photo-1702200066320-.jpg">
+                </label>
+                </abbr>
+            </div>
+        </div>
+
+        <div>
+            <!-- extra disatance  -->
+        </div>
+    </div>
+
+    <div class="mt-2 row d-flex justify-content-center" >
+        <div class="col-11 col-md-10 col-lg-8 col-xl-6 glass p-3 rounded">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon2">Company name</span>
+                <input type="text" class="form-control" placeholder="Recipient's username" readonly id="companyNameInput">
+            </div>
+            
+            <div class="input-group">
+                <span class="input-group-text">about</span>
+                <textarea class="form-control" aria-label="With textarea" readonly id="aboutInput"></textarea>
+            </div>
+
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="basic-addon2">No of employee's</span>
+                <input type="text" class="form-control" readonly>
+            </div>
+            <div class="input-group mt-3" id="companyIdGroup">
+                <span class="input-group-text" id="basic-addon2">Company id</span>
+                <input type="text" class="form-control " value="68" readonly>
+                <button type="button" class="btn btn-primary"><i class="fa-solid fa-arrow-rotate-right "></i> Reset</button>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button type="button" class="btn btn-warning">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-danger mt-3">Delete the company</button>
+    </div>
+
+</div>

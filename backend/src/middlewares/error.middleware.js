@@ -1,6 +1,5 @@
 export class customError extends Error{
     constructor(statuscode,message,key="msg"){
-        console.log("came");
         if (typeof(message)=="object"){
             super("object");
             this.object=message;

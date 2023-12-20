@@ -1,7 +1,7 @@
 import { customError } from "../../middlewares/error.middleware.js";
 import { requestRepository } from "./request.repository.js";
 import { rolesRepository } from "./roles.repository.js";
-import { companyRepository } from "../admin/company.repository.js";
+import { companyRepository } from "../company/company.repository.js";
 export class rolesAndRequestController{
     constructor(){
         this.requestRepository=new requestRepository();
