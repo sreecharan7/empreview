@@ -6,13 +6,8 @@ export class requestToBackend{
         this.companyRepository=new companyRepository();
         this.rolesRepository=new rolesRepository();
     }
-    checkTheCompanyToUserIdToAdmin=async (userId,companyId)=>{
-        const company=await this.rolesRepository.checkUserIdToAdminId(userId,companyId);
-        if( company){
-            return company.companyName;
-        }
-        else{
-            return false;
-        }
+    checkTheCompanyToUserIdToAdmin=async (userId,rolesId)=>{
+        const role=await this.rolesRepository.checkUserIdToAdminId(userId,rolesId);
+        return role;
     }
 }

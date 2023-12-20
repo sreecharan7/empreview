@@ -58,15 +58,15 @@ export class viewController{
             next(err);
         }
     }
-    adminView=async (req,res,next)=>{
+    adminViewHome=async (req,res,next)=>{
         try{
-            if(!isValidObjectId(req.params.id)){
+            if(!isValidObjectId(req.params.roleId)){
                 res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
                 return;
             }
-            let companyName=await this.requestToBackend.checkTheCompanyToUserIdToAdmin(req.userData.userId,req.params.id);
-            if(companyName){
-                await res.render("adminView",{title:"Company",javascript:null,companyName:companyName});
+            let role=await this.requestToBackend.checkTheCompanyToUserIdToAdmin(req.userData.userId,req.params.roleId);
+            if(role){
+                await res.render("adminViewHome",{title:"Company",javascript:null,companyName:role.companyName,companyId:role.companyId,roleId:role._id});
             }
             else{
                 res.redirect("/404");
@@ -75,5 +75,18 @@ export class viewController{
         catch(err){
             next(err);
         }
+    }
+    adminViewAbout=async(req,res,next)=>{
+        try{
+            if(!isValidObjectId(req.params.roleId)&&!isValidObjectId(req.params.companyId)){
+                res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            res.render("adminViewAbout",{title:"About company",javascript:null});
+        }
+        catch(err){
+            next(err);
+        }
+
     }
 }

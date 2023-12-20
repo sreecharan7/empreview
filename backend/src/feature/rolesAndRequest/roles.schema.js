@@ -6,6 +6,7 @@ export const rolesSchema=new mongoose.Schema({
     companyId:{type:mongoose.Schema.Types.ObjectId,ref:"company",index:true},
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"users",index:true},
     companyName:{type:"String",required:true},
+    note:{type:"String",default:""},
     time:{type:"Date",required:true,default:Date.now()}
 });
 

@@ -8,11 +8,9 @@ export const companyschema=new mongoose.Schema({
     adminId:{type:[mongoose.Schema.Types.ObjectId],ref:"roles",require:true,default:[]},
     about:{type:"String",require:true,default:""},
     time:{type:"Date",required:true,default:Date.now()},
-    // about:{type:"String",required:true,default:""}
 });
 
 companyschema.index({companyName:1,userId:1},{unique:true});
-companyschema.index({_id:1,adminId:1});
 
 
 companyschema.pre("save",async function(next){

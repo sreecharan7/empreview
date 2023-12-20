@@ -2,13 +2,14 @@ import mongoose  from "mongoose";
 import { rolesSchema } from "./roles.schema.js";
 import { customError } from "../../middlewares/error.middleware.js";
 
+
 const requestModel=mongoose.model("request",rolesSchema);
 
 
 export class requestRepository{
-    addRequest=async (userId,companyId,companyName)=>{
+    addRequest=async (userId,companyId,companyName,note)=>{
         try{
-        let newRequest=await requestModel.create({role:"employee",userId,companyId,companyName});
+        let newRequest=await requestModel.create({role:"employee",userId,companyId,companyName,note});
         await newRequest.save();
         return newRequest;
         }

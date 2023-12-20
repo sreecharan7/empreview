@@ -22,7 +22,7 @@ function createOrganisationModelSetter(){
     modal.show();
 }
 function createrequestModelSetter(){
-    modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Create the request to company</h1>
+    modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Create the request to join in the organisation</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
     modalBody.innerHTML=`<div id="model-message-shower"></div><div class="row g-3"><div class="col-auto"><label for="organisationId">Organisation Id :-</label></div>
         <div class="col-auto">
@@ -146,7 +146,7 @@ function getThedata(element){
                           <p class="text-end">
                             ${formatDate(i.time)}
                           </p>
-                          <a class="btn btn-primary  col-6" >go to edit</a>
+                          <a class="btn btn-primary  col-6" href="/v/a/${i._id}">go to edit</a>
                         </div>
                       </div>`
                     if(i.role=="admin"){

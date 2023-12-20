@@ -14,10 +14,10 @@ export class rolesAndRequestController{
         for(const key in req.body){
             if (typeof req.body[key] === 'string') {req.body[key]=req.body[key].trim();}
         }
-        const {companyName,role, companyId}=req.body;
+        const {companyName,role, companyId,about,note}=req.body;
         const {userId}=req.userData;
         if(role==="admin"){
-            let company=await this.companyRepository.add(companyName,userId);
+            let company=await this.companyRepository.add(companyName,userId,about);
             let admin=await this.rolesRepository.addNewRole(role,userId,company._id,companyName);
             company.adminId.push(admin._id);
             company.save();
@@ -33,7 +33,7 @@ export class rolesAndRequestController{
                 throw new customError(400,"your request is aldready recived to that organisation, please wait admin to accept for that organisation");
             }
             //create the request in this process
-            await this.requestRepository.addRequest(userId,company._id,company.companyName);
+            await this.requestRepository.addRequest(userId,company._id,company.companyName,note);
             res.status(201).send({status:true,msg:"request to be in the organisation is sucessfully made"});
         }
         else{

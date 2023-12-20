@@ -55,12 +55,12 @@ export class rolesRepository{
             }
         }
     }
-    checkUserIdToAdminId=async (userId,companyId)=>{
+    checkUserIdToAdminId=async (userId,rolesId)=>{
         try{
-            const company=await rolesModel.findOne({userId,companyId});
-            if(company){
-                if(company.role=="admin"||company.role=="both"){
-                    return company;
+            const role=await rolesModel.findOne({userId,_id:rolesId});
+            if(role){
+                if(role.role=="admin"||role.role=="both"){
+                    return role;
                 }
                 else{
                     return null;

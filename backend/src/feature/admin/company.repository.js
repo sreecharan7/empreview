@@ -6,9 +6,9 @@ const companyModel=mongoose.model("company",companyschema);
 
 
 export class companyRepository{
-    add=async (companyName,userId)=>{
+    add=async (companyName,userId,about)=>{
         try{
-            const newCompany=companyModel.create({companyName,userId});
+            const newCompany=companyModel.create({companyName,userId,about});
             // await newCompany.save();
             return await newCompany;
         }
