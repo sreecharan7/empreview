@@ -7,6 +7,8 @@ export const companyschema=new mongoose.Schema({
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"users",require:true},
     adminId:{type:[mongoose.Schema.Types.ObjectId],ref:"roles",require:true,default:[]},
     about:{type:"String",require:true,default:""},
+    photoName:{type:"String",require:true,default:"default-company.webp"},
+    photoPath:{type:"String",require:true,default:"/website/default-company.webp"},
     time:{type:"Date",required:true,default:Date.now()},
 });
 
@@ -15,11 +17,12 @@ companyschema.index({companyName:1,userId:1},{unique:true});
 
 companyschema.pre("save",async function(next){
     if(this.isNew){
-        const generatedUniqueNumber = Math.floor(Math.random() * 100000000);
+        let generatedUniqueNumber = Math.floor(Math.random() * 100000000);
         let existingcheck=await this.constructor.findOne({shortCompanyId:generatedUniqueNumber});
         while(true){
-            existingcheck=await this.constructor.findOne({shortCompanyId:generatedUniqueNumber});
             if(!existingcheck){break;}
+            generatedUniqueNumber = Math.floor(Math.random() * 100000000);
+            existingcheck=await this.constructor.findOne({shortCompanyId:generatedUniqueNumber});
         }
         this.shortCompanyId=generatedUniqueNumber;
     }

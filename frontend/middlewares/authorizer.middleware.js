@@ -19,6 +19,10 @@ export async function authorization(req,res,next){
                 if(req["StoreCokkieData"]){
                     req.userData.cookieData=data;
                 }
+                req.userData.companyId=data["companyId"];
+                req.userData.role=data["role"];
+                req.userData.companyName=data["companyName"];
+                req.userData.roleId=data["roleId"];
                 next();
             }
             else{

@@ -15,11 +15,10 @@ export async function authorization(req,res,next){
             if(await userR.confirmUserIdUsingConnectinId(data.user,data.connectionId)){
                 req.userData={};
                 req.userData.userId=data.user;
-                req.userData.connectionId=data.connectionId;
-                if (data["companyId"]&&data["role"]){
-                    req.userData.companyId=data["companyId"];
-                    req.userData.role=data["role"];
-                }
+                req.userData.connectionId=data.connectionId
+                req.userData.companyId=data["companyId"];
+                req.userData.role=data["role"];
+                req.userData.roleId=data["roleId"];
                 next();
             }
             else{

@@ -21,7 +21,7 @@ export class viewController{
     }
     login=async (req,res,next)=>{
         try{
-           await res.render("login",{title:"Login",javascript:`<script type="text/javascript" src="./javascript/login.js" ></script>`});
+           await res.render("login",{title:"Login",javascript:`<script type="text/javascript" src="/javascript/login.js" ></script>`});
         }
         catch(err){
             next(err);
@@ -29,7 +29,7 @@ export class viewController{
     }
     signup=async (req,res,next)=>{
         try{
-            await res.render("signup",{title:"Sign",javascript:`<script type="text/javascript" src="./javascript/signup.js" ></script>`});
+            await res.render("signup",{title:"Sign",javascript:`<script type="text/javascript" src="/javascript/signup.js" ></script>`});
         }
         catch(err){
             next(err);
@@ -37,7 +37,7 @@ export class viewController{
     }
     forgotPassword=async (req,res,next)=>{
         try{
-            await res.render("forgotPassword",{title:"forgot password",javascript:`<script type="text/javascript" src="./javascript/forgotPassword.js" ></script>`});
+            await res.render("forgotPassword",{title:"forgot password",javascript:`<script type="text/javascript" src="/javascript/forgotPassword.js" ></script>`});
         }
         catch(err){
             next(err);
@@ -53,7 +53,7 @@ export class viewController{
     }
     MyaccountView=async (req,res,next)=>{
         try{
-            await res.render("myAccountView",{title:"Home",javascript:`<script type="text/javascript" src="./javascript/myAccountView.js" ></script>`,name:req.userData.name});
+            await res.render("myAccountView",{title:"Home",javascript:`<script type="text/javascript" src="/javascript/myAccountView.js" ></script>`,name:req.userData.name});
         }
         catch(err){
             next(err);
@@ -61,14 +61,21 @@ export class viewController{
     }
     adminViewHome=async (req,res,next)=>{
         try{
-            if(!isValidObjectId(req.params.roleId)){
+            if(!(isValidObjectId(req.query.r)||(req.userData["companyId"]&&(req.userData["role"]=="admin"||req.userData["role"]=="both")))){
                 res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
                 return;
             }
-            let role=await this.requestToBackend.checkTheCompanyToUserIdToAdmin(req.userData.userId,req.params.roleId);
+            let roleId=req.query.r
+            if(!roleId){
+                await res.render("adminViewHome",{title:"Company",javascript:null,companyName:req.userData["companyName"]});
+                return;
+            }
+            let role=await this.requestToBackend.checkTheCompanyToUserIdToAdmin(req.userData.userId,roleId);
             if(role){
                 req.userData.cookieData["companyId"]=role.companyId;
                 req.userData.cookieData["role"]=role.role;
+                req.userData.cookieData["companyName"]=role.companyName;
+                req.userData.cookieData["roleId"]=role._id;
                 var token=jwt.sign(req.userData.cookieData, process.env.jwt);
                 res.cookie(process.env.cookieNameUserCredientails,token,{maxAge: parseInt(process.env.expoireOfCookieUserCredientails)});
                 await res.render("adminViewHome",{title:"Company",javascript:null,companyName:role.companyName});
@@ -83,11 +90,12 @@ export class viewController{
     }
     adminViewAbout=async(req,res,next)=>{
         try{
-            if(!isValidObjectId(req.params.roleId)&&!isValidObjectId(req.params.companyId)){
-                res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+            if(!(req.userData["companyId"]&&(req.userData["role"]=="admin"||req.userData["role"]=="both"))){
+                await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
                 return;
             }
-            res.render("adminViewAbout",{title:"About company",javascript:null});
+            const company=await this.requestToBackend.getCompanyDetails(req.userData["companyId"],req.userData["roleId"]);
+            res.render("adminViewAbout",{title:"About company",javascript:`<script type="text/javascript" src="/javascript/adminViewAbout.js" ></script>`,company:company});
         }
         catch(err){
             next(err);

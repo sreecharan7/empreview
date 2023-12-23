@@ -4,8 +4,8 @@ const storage=multer.diskStorage({
     destination:function (req,file,cb){
         //dynamic storage
         let ds='public'
-        if(req.fileStorage){
-            ds=req.fileStorage;
+        if(req.fileStorageCustom){
+            ds=req.fileStorageCustom;
         }
         else if(file.fieldname==="photo"){
             ds=ds+"/images/photos"

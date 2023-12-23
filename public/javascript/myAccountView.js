@@ -4,10 +4,10 @@
 function createOrganisationModelSetter(){
     modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Create the organisation</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
-    modalBody.innerHTML=`<div id="model-message-shower"></div><div class="row g-3"><div class="col-auto" id="form-data"><label for="organisationName">Organisation name :-</label></div>
-        <div class="col-auto">
-          <input type="text" class="form-control" id="organisationName" placeholder="Organisation name">
-        </div>
+    modalBody.innerHTML=`<div id="model-message-shower"></div><div class="row g-3"><div class="col-auto" id="form-data"><div class="col-auto input-group"><label for="organisationName">Organisation name :-</label>
+    <input type="text" class="form-control" id="organisationName" placeholder="Organisation name">
+    </div>
+    </div>
         <div class="col-auto input-group">
                 <label for="organisationName">About organiation :- </label>
                 <textarea class="form-control" aria-label="With textarea" placeholder="About organisation" name="about" id="aboutOrganisation" required></textarea>
@@ -24,10 +24,11 @@ function createOrganisationModelSetter(){
 function createrequestModelSetter(){
     modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Create the request to join in the organisation</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
-    modalBody.innerHTML=`<div id="model-message-shower"></div><div class="row g-3"><div class="col-auto"><label for="organisationId">Organisation Id :-</label></div>
-        <div class="col-auto">
+    modalBody.innerHTML=`<div id="model-message-shower"></div><div class="row g-3"><div class="col-auto"><div class="col-auto input-group"><label for="organisationId">Organisation Id :-</label>
+
           <input type="number" class="form-control" id="organisationId" placeholder="Organisation Id">
-        </div>
+          </div>
+          </div>
         <div class="col-auto input-group">
         <label for="organisationName">note :- </label>
         <textarea class="form-control" aria-label="With textarea" placeholder="note to the organisation about request (optional)" name="about" id="note" required></textarea>
@@ -146,7 +147,7 @@ function getThedata(element){
                           <p class="text-end">
                             ${formatDate(i.time)}
                           </p>
-                          <a class="btn btn-primary  col-6" href="/v/a/${i._id}">go to edit</a>
+                          <a class="btn btn-primary  col-6" href="/v/a?r=${i._id}">go to edit</a>
                         </div>
                       </div>`
                     if(i.role=="admin"){

@@ -31,13 +31,13 @@ export class companyController{
             for(const key in req.body){
                 if (typeof req.body[key] === 'string') {req.body[key]=req.body[key].trim();}
             }
-            let {companyName,about,roleId}=req.body;
-            let {userId,companyId,role}=req.userData;
+            let {companyName,about}=req.body;
+            let {userId,companyId,role,roleId}=req.userData;
 
             if(!isValidObjectId(roleId)){
                 throw new customError(400,"give the correct roleid");
             }
-            if(!companyName&&!about){
+            if(!companyName&&!about&&companyName==''&&about==''){
                 throw new customError(400,"give some proper details company name or about");
             }
             //check the userId macthes with rolesId
@@ -62,6 +62,33 @@ export class companyController{
             }
         }
         catch(err){
+            next(err);
+        }
+    }
+    updateThePhotoOfCompany=async (req,res,next)=>{
+        try{
+            let photo=req.file;
+            let {companyId,role,roleId}=req.userData;
+            if(!photo){
+                throw new customError(400,"please upload the image");
+            }
+            if(!(companyId&&roleId&&role&&(role=="admin"||role=="both"))){
+                throw new customError(400,"check the roleid or you are not the admin");                
+            }
+            let photoPath="\\"+photo.path.replace(/^public\\/, '');
+            let photoName=photo.originalname;
+            await this.companyRepository.updateTheCompanyPhoto(companyId,roleId,photoPath,photoName);
+            res.json({status:true,msg:"successfully changed the photo"});
+        }catch(err){
+            next(err);
+        }
+    }
+    resetTheShortCompanyId=async(req,res,next)=>{
+        try{
+            let {companyId,roleId}=req.userData;
+            const shortCompanyId= await this.companyRepository.resetTheShortCompanyId(companyId,roleId);
+            res.json({status:true,msg:"successfully reset the company id",companyId:shortCompanyId});
+        }catch(err){
             next(err);
         }
     }

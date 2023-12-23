@@ -30,7 +30,7 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
     <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #e3f2fd;">
         <div class="container-fluid ">
 
-          <a class="navbar-brand" href="/"><img src="./website/logo.png" alt="logo" width="35" height="30">empreview</a>
+          <a class="navbar-brand" href="/"><img src="/website/logo.png" alt="logo" width="35" height="30" id="logoImage">empreview</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -96,6 +96,7 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
   var modalFooter=document.getElementById("modalFooter");
 
   async function signUpCheckUsingRequestToServer(){
+
     // var xhr = new XMLHttpRequest();
     // xhr.open("GET", "/api/user/authorization-check", true);
     // xhr.onreadystatechange = function () {

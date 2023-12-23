@@ -10,4 +10,8 @@ export class requestToBackend{
         const role=await this.rolesRepository.checkUserIdToAdminId(userId,rolesId);
         return role;
     }
+    getCompanyDetails=async (companyId,roleId)=>{
+        const company=await this.companyRepository.checkTheAdminUseCompanyIdAndGetData(companyId,roleId);
+        return company;
+    }
 }

@@ -19,8 +19,8 @@ export class userController {
             const {email,password,name,about}=req.body;
             let {photo,banner}=req.files;
             let photoPath,bannerpath,photoOriginalName,bannerOriginalName;
-            if(photo){photoPath=photo[0].path.replace(/^public\\/, '');;photoOriginalName=photo[0].originalname;}
-            if(banner){bannerpath=banner[0].path.replace(/^public\\/, '');;bannerOriginalName=banner[0].originalname;}
+            if(photo){photoPath="\\"+photo[0].path.replace(/^public\\/, '');;photoOriginalName=photo[0].originalname;}
+            if(banner){bannerpath="\\"+banner[0].path.replace(/^public\\/, '');;bannerOriginalName=banner[0].originalname;}
             await this.userRepository.addUser(email,password,name,about,photoPath,bannerpath,photoOriginalName,bannerOriginalName);
             res.status(201).send({status:true,msg:"user created sucessfully"});
         }catch(err){
