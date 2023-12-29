@@ -24,7 +24,7 @@ function customElementPreview(){
             confirmCompanyPhotoChange();
         }
         else{
-            alert("please select the file");
+            alertToast("please select the file");
         }
     };
 }
@@ -36,7 +36,7 @@ function editButtonClick(){
     submitButtonDiv.classList.remove("d-none");
     companyNameInput.readOnly=false;
     aboutInput.readOnly=false;
-    alert("Now you can edit, Company name and about sections");
+    alertToast("Now you can edit, Company name and about sections");
 }
 function closeButtonClick(){
     editButtonDiv.classList.remove("d-none");
@@ -47,7 +47,7 @@ function closeButtonClick(){
 function submitButtonClick(){
     const companyName=companyNameInput.value.trim();
     const about=aboutInput.value.trim();
-    if(companyName==''||about==''){alert("company name or about are empty, please fill");return;}
+    if(companyName==''||about==''){alertToast("company name or about are empty, please fill");return;}
     submitButton.disabled=true;
 
     var xhr = new XMLHttpRequest();
@@ -83,13 +83,13 @@ function resertCompanyId(){
         if (xhr.readyState == 4) {
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==200){
-                alert("reset succesfull");
+                alertToast("reset succesfull");
                 resetCompanyIdInput.value=response["companyId"];
                 resetCompanyIdButton.disabled=false;
                 resetIcon.classList.remove("fa-spin");
             }
             else{
-                alert(`${response["msg"]}`);
+                alertToast(`${response["msg"]}`);
                 resetCompanyIdButton.disabled=false;
                 resetIcon.classList.remove("fa-spin");
             }
@@ -123,7 +123,7 @@ function confrimPhotoSubmission(){
         if (xhr.readyState == 4) {
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==200){
-                alert("company photo change succesfull");
+                alertToast("company photo change succesfull");
                 imgShowElement.style.opacity=1;
                 spinnerForCompanyPhoto.classList.add("d-none");
                 const reader=new FileReader();
@@ -133,7 +133,7 @@ function confrimPhotoSubmission(){
                 reader.readAsDataURL(fileChangeRequest);
             }
             else{
-                alert(`${response["msg"]}`);
+                alertToast(`${response["msg"]}`);
                 imgShowElement.style.opacity=1;
                 spinnerForCompanyPhoto.classList.add("d-none");
             }

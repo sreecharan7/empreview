@@ -23,6 +23,12 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
 .hover:hover{
   box-shadow: 0px 0px 6px 4px rgba(181, 71, 71, 0.2);
 }
+#liveToast {
+      position: fixed;
+      top: 65px;
+      right: 20px;
+      z-index: 9999; /* Set a high z-index value to keep it on top */
+}
     </style>
   </head>
   <body>
@@ -84,6 +90,24 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
     </div>
   </div>
 </div>
+
+
+<!-- toasts -->
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3 ">
+  <div id="liveToast" class="toast glass" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header glass">
+      <img src="/website/logo.png" class="rounded me-2" alt="logo" height="20px" width="20px">
+      <strong class="me-auto">empreview</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="toast-body">
+    </div>
+  </div>
+</div>
+
+
+
   <%if(javascript){%>
     <%-javascript%>
   <%}%>
@@ -94,6 +118,9 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
   var modalHeader=document.getElementById("modalHeader");
   var modalBody=document.getElementById("modalBody");
   var modalFooter=document.getElementById("modalFooter");
+  const toastLive= document.getElementById('liveToast');
+  const toastBody=toastLive.querySelector("#toast-body");
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLive);
 
   async function signUpCheckUsingRequestToServer(){
 
@@ -168,6 +195,12 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
     };
     xhr.send();
   }
+
+function alertToast(msg){
+  toastBody.innerHTML=msg;
+  toastBootstrap.show()
+}
+
   signUpCheckUsingRequestToServer();
 </script>
 </body>

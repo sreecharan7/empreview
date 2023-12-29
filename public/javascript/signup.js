@@ -60,11 +60,13 @@ function formSubmission(event){
     xhr.onreadystatechange=function(){
         if(xhr.readyState==4){
             let response = JSON.parse(xhr.responseText);
-            if(xhr.status==201){
+            if(xhr.status==201){formData.get("email")
                 console.log("sucess");
                 var box=`<div class="alert alert-success" role="alert">${response["msg"]}. redirecting to login page...</div>`
                 wholePageMessageShower.innerHTML=box;
-                setTimeout(function(){window.location.replace(`/login?email=${formData.get("email")}&password=${formData.get("password")}`);},3000)
+                localStorage.setItem(`${formData.get("email")}`, `${formData.get("password")}`);
+                //local storage will be deleted in the page once after login
+                setTimeout(function(){window.location.replace(`/login?email=${formData.get("email")}`);},3000)
             }
             else{
                 if(response["email"]){

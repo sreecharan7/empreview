@@ -15,7 +15,8 @@ export async function authorization(req,res,next){
             if(await userR.confirmUserIdUsingConnectinId(data.user,data.connectionId)){
                 req.userData={};
                 req.userData.userId=data.user;
-                req.userData.connectionId=data.connectionId
+                req.userData.connectionId=data.connectionId,
+                req.userData.companyName=data["companyName"];
                 req.userData.companyId=data["companyId"];
                 req.userData.role=data["role"];
                 req.userData.roleId=data["roleId"];

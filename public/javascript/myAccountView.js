@@ -15,6 +15,9 @@ function createOrganisationModelSetter(){
                     please provide about section
                 </div>
             </div>
+            <div>
+            <a href="#" onclick="alert('**Once you create the organisation you will become the admin you will able add employee, you can use another email to join as employee**')">Know more!</a>
+            </div>
     </div>`;
     modalFooter.innerHTML=`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     <button type="button" class="btn btn-primary" id="create-organisation-submit" onClick="createSubmit(this)">Submit</button>`;
@@ -36,6 +39,9 @@ function createrequestModelSetter(){
             please provide about section
         </div>
     </div>
+    <div>
+            <a href="#" onclick="alert('**Once you request to join in the organisation, your profile along with request will be sent to the organisation admin to accept untill then you should wait**')">Know more!</a>
+            </div>
     </div>`;
     modalFooter.innerHTML=`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     <button type="button" class="btn btn-primary" id="create-request-submit" onClick="createSubmit(this)">Submit</button>`;

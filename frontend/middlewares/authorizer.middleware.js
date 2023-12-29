@@ -48,6 +48,7 @@ export async function authorization(req,res,next){
         }
     }
     catch(err){
-        next(err);
+        res.cookie(process.env.cookieNameUserCredientails,'',{expires:new Date(0)});
+        await res.render("access-denied",{title:"Acess denied",javascript:null})
     }
 }

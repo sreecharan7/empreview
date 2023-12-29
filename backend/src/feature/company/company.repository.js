@@ -158,4 +158,12 @@ export class companyRepository{
             }
         }
     }
+    deleteCompant=async (companyId,roleId,userId)=>{
+        try{
+
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while deleting the company");
+        }
+    }
 }

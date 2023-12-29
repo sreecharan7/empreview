@@ -1,4 +1,4 @@
-import { requestToBackend } from "./requsetToBackend.repository.js";
+import { requestToBackend } from "../middlewares/requsetToBackend.repository.js";
 import jwt from "jsonwebtoken";
 
 const isValidObjectId = (id) => {
@@ -101,5 +101,32 @@ export class viewController{
             next(err);
         }
 
+    }
+    addEmployee=async (req,res,next)=>{
+        try{
+            if(!(req.userData["companyId"]&&(req.userData["role"]=="admin"||req.userData["role"]=="both"))){
+                await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            res.render("addEmployee",{title:"add employee",javascript:`<script type="text/javascript" src="/javascript/addEmployee.js" ></script>`});
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    requestToUserPage=async(req,res,next)=>{
+        try{
+            const {c}=req.query;
+            const {userId}=req.userData;
+            const re=await this.requestToBackend.findTheRequest(c,userId);
+            if(re.length==0){
+                await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"May be page is expired",sideHeading:"Something went wrong go to home page, may be request is expired",button:"home",link:"/"});
+            }
+            else{
+                await res.render("requestToUserPage",{title:"add employee",javascript:`<script type="text/javascript" src="/javascript/requestToUserPage.js" ></script>`,re});
+            }
+        }catch(err){
+            next(err);
+        }
     }
 }

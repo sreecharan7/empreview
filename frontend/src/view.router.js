@@ -25,13 +25,17 @@ app.get("/forgot-password",(req,res,next)=>{viewC.forgotPassword(req,res,next)})
 app.get("/terms-and-conditions",(req,res,next)=>{viewC.termsAndCondition(req,res,next)});
 
 app.get("/v",authorization,(req,res,next)=>{viewC.MyaccountView(req,res,next)});
-app.get("/v/a/about",authorization,(req,res,next)=>{viewC.adminViewAbout(req,res,next);});
 
 app.get("/v/a",(req,res,next)=>{
     req["StoreCokkieData"]=true;
     authorization(req,res,next);
 },(req,res,next)=>{viewC.adminViewHome(req,res,next)});
 
+app.get("/v/a/about",authorization,(req,res,next)=>{viewC.adminViewAbout(req,res,next);});
+
+app.get("/v/a/add",authorization,(req,res,next)=>{viewC.addEmployee(req,res,next)});
+
+app.get("/v/r",authorization,(req,res,next)=>{viewC.requestToUserPage(req,res,next);})
 app.use((req,res,next)=>{res.status(404).render("404",{javascript:null,title:"Page not found"})});
 
 export default app;

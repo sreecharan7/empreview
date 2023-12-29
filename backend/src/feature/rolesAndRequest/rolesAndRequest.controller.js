@@ -63,5 +63,57 @@ export class rolesAndRequestController{
             next(err);
         }
     }
-
+    dataOfRequestsToCompany=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            //should handle when the admin is removed when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            const request=await this.requestRepository.getAllRequestsRelatedToCompanyID(companyId);
+            res.json({request});
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    changeRequestToRole=async (req,res,next)=>{
+        try{
+            const requestId=req.body.requestId;
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            //should handle when the admin is removed the another admin when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            if(!requestId){
+                throw  new customError(400,"please provide the requestId");
+            }
+            const request=await this.requestRepository.getElementByIdAndDelete(requestId);
+            await this.rolesRepository.changeRequestToRole(request);
+            res.json({status:true,msg:"sucessfuly cahnged request to role"});
+        }catch(err){
+            next(err);
+        }
+    }
+    revertRequest=async (req,res,next)=>{
+        try{
+            const requestId=req.body.requestId;
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            //should handle when the admin is removed the another admin when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            if(!requestId){
+                throw  new customError(400,"please provide the requestId");
+            }
+            await this.requestRepository.deleteRequest(requestId);
+            res.json({status:true,msg:"sucessfuly, remove the request"});
+            
+        }catch(err){
+            next(err);
+        }
+    }
 }

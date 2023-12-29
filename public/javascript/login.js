@@ -57,8 +57,8 @@ fin.addEventListener("submit",formSubmission);
 const urlParams = new URLSearchParams(window.location.search);
 
 const email= urlParams.get("email");
-const password= urlParams.get("password");
-
+const password= localStorage.getItem(email);
+localStorage.removeItem(email);
 if(email&&password&&emailInput&&passwordInput&&emailInput[0]&&passwordInput[0]){
     emailInput[0].value=email;
     passwordInput[0].value=password;

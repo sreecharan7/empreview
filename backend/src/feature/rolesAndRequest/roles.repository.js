@@ -92,4 +92,11 @@ export class rolesRepository{
             throw new customError(400,"something went wrong while changing the name");
         }
     }
+    changeRequestToRole=async (request)=>{
+        try{
+            await this.addNewRole("employee",request.userId,request.companyId,request.companyName);
+        }catch(err){
+            throw new customError(400,"something went wrong changing the role");
+        }
+    }
 }
