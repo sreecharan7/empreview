@@ -59,7 +59,6 @@ function formSubmissionEmail(event){
                 setInterval(()=>{submitButton.disabled =false;},1500)
                 alertToast(response.msg);
                 emailInput.value='';
-                NoteInput.value='';
                 emailInput.readOnly=false;
                 NoteInput.readOnly=false;
             }

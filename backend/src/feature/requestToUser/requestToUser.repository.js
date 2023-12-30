@@ -68,48 +68,70 @@ export class requestToUserRepository{
         }
     }
 
+    acceptedOrrejectTheRequest=async(companyId,userId)=>{
+        try{
+            const re=await requestToUserModel.findOneAndDelete({companyId,userId});
+            if(re){
+                return re;
+            }
+            else{
+                throw new customError(400,"passing error");
+            }
+        }catch(err){
+            throw new customError(400,"something went wromng , check details");
+        }
+    }
+
+
     addRequest2=async (companyId,userId,note,adminId)=>{
         try{
             userId=new ObjectId(userId);
             companyId=new ObjectId(companyId);
             console.log(companyId);
            const result=await requestToUserModel.aggregate([
-                {
-                  $facet: {
-                    "requestTouser": [
+            {
+                "$facet":{
+                    "checkAnyRequst":[
                         {
-                            "$group":{
-                                _id:null,
-                                uniqueCombinations:{
-                                    "$addToSet":{companyId,userId}
-                                },
-                                count1:{"$sum":1}
+                            "$match":{
+                                "$expr":{
+                                    "$and":[
+                                        {"$eq":["$companyId",companyId]},
+                                        {"$eq":["$userId",userId]}
+                                    ]
+                                }
                             }
                         }
                     ],
-                    "roles": [
-                      {
-                        $lookup: {
-                          from: "roles",
-                          let:{companyId},
-                          pipeline: [
-                            {
-                                "$match": {
-                                    companyId:"$companyId"
-                                }
-                            }
-                          ],
-                          as: "matchedRequests"
+                    "CheckToEmployee":[
+                        {
+                            "$lookup":{
+                                from:"roles",
+                                let :{companyId,userId},
+                                pipeline:[
+                                    {
+                                        "$match":{
+                                            "$expr":{
+                                                "$and":[
+                                                    {"$eq":["$companyId","$$companyId"]},
+                                                    {"$eq":["$userId","$$userId"]}
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ],
+                                as:"results"
+                            },
                         }
-                      }
                     ]
-                  }
-                },
-                {
-                  $project: {
-                    rolesCount:"$matchedRequests"
-                  }
                 }
+            },
+            {
+              $project: {
+                re:"$checkAnyRequst",
+                c:"$CheckToEmployee"
+              }
+            }
               ]);
         return result;
               

@@ -65,7 +65,7 @@ function submitButtonClick(){
                 submitButton.disabled=false;
             }
             else{
-                alert(`${response["msg"]}`);
+                alertToast(`${response["msg"]}`);
                 submitButton.disabled=false;
             }
         }

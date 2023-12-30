@@ -4,6 +4,7 @@ import { customError } from "../../middlewares/error.middleware.js";
 import {rolesRepository} from "../rolesAndRequest/roles.repository.js";
 import { requestRepository } from "../rolesAndRequest/request.repository.js";
 import {mailer} from "../../middlewares/emailsender.middleware.js"
+import {companyRepository} from "../company/company.repository.js";
 
 export class  requestToUserController{
     constructor(){
@@ -11,6 +12,7 @@ export class  requestToUserController{
         this.userRepository=new userRepository();
         this.rolesRepository=new rolesRepository();
         this.requestRepository=new requestRepository();
+        this.companyRepository=new companyRepository();
     }
     addUser=async(req,res,next)=>{
         try{
@@ -98,6 +100,37 @@ export class  requestToUserController{
         catch(err){
             next(err);
         }
+    }
+    acceptTheRequest=async (req,res,next)=>{
+      try{
+        const {companyId}=req.body;
+        const {userId}=req.userData;
+        const re=await this.requestToUserRepository.acceptedOrrejectTheRequest(companyId,userId);
+        if(re){
+          const companyDetails=await this.companyRepository.getTheDataUsingCompanyId(companyId);
+          const request={companyName:companyDetails.companyName,companyId:companyId,userId};
+          await this.rolesRepository.changeRequestToRole(request);
+          res.json({status:true,msg:"accepted the company sucessfully"});
+        }else{
+          throw new customError(400,"check teh details");
+        }
+      }catch(err){
+        next(err);
+      }
+    }
+    rejectTheRequest=async (req,res,next)=>{
+      try{
+        const {companyId}=req.body;
+        const {userId}=req.userData;
+        const re=await this.requestToUserRepository.acceptedOrrejectTheRequest(companyId,userId);
+        if(re){
+          res.json({status:true,msg:"rejected the company sucessfully"});
+        }else{
+          throw new customError(400,"check teh details");
+        }
+      }catch(err){
+        next(err);
+      }
     }
     addUser2=async(req,res,next)=>{
         try{

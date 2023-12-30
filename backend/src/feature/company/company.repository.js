@@ -9,11 +9,10 @@ export class companyRepository{
     add=async (companyName,userId,about)=>{
         try{
             const newCompany=companyModel.create({companyName,userId,about});
-            // await newCompany.save();
             return await newCompany;
         }
         catch(err){
-            throw new customError(400,"organisation name is is aldready exist with your account");
+            throw new customError(400,"organisation name is is aldready exist , choose another");
         }
     }
     getCompanyByShortComapyId=async (shortCompanyId)=>{
@@ -29,13 +28,14 @@ export class companyRepository{
         try{
             let company=await companyModel.findById(companyId);
             if(!company){throw new customError(400,"company is not found");}
-            if(method==="+"){
+            if(method=="+"){
                 company.noOfEmployee+=employeeNumber;
             }
-            else if(method==="-"){
+            else if(method=="-"){
                 if(company.noOfEmployee<employeeNumber){throw new customError(400,"data is mismathed while changing the employee");}
                 company.noOfEmployee-=employeeNumber;
             }
+            await company.save();
         }
         catch(err){
             throw new customError(400,"something went wrong while changing the emplyoees");
@@ -70,9 +70,9 @@ export class companyRepository{
             }
         }
     }
-    checkTheCompanyNameToTheUserId=async(userId,companyName)=>{
+    checkTheCompanyName=async(companyName)=>{
         try{
-            let count =await companyModel.countDocuments({companyName,userId});
+            let count =await companyModel.countDocuments({companyName});
             return count;
         }
         catch(err){
@@ -95,14 +95,12 @@ export class companyRepository{
                 return false;
             }else{
                 //check the name
-                if(await this.checkTheCompanyNameToTheUserId(company.userId,companyName)){
-                    throw new customError(400,"Name aldready taken in to the admin");
+                if(await this.checkTheCompanyName(companyName)){
+                    throw new customError(400,"Name aldready taken ,choose another");
                 }
                 company.companyName=companyName;
                 company.about=about;
-                company.save().catch((err)=>{
-                    throw new customError(400,"Name aldready taken in to the admin");
-                })
+                company.save();
                 return true;
             }
         }

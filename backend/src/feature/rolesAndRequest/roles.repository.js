@@ -95,8 +95,15 @@ export class rolesRepository{
     changeRequestToRole=async (request)=>{
         try{
             await this.addNewRole("employee",request.userId,request.companyId,request.companyName);
+            await increaseCount(request.companyId);
         }catch(err){
             throw new customError(400,"something went wrong changing the role");
         }
     }
+}
+
+import {companyRepository} from "../company/company.repository.js"
+const companyR=new companyRepository();
+async function increaseCount(companyId){
+    await companyR.addOrRemoveEmployee(companyId,1,"+")
 }

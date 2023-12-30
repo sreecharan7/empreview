@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 export const companyschema=new mongoose.Schema({
-    companyName:{type:"String",required:true},
+    companyName:{type:"String",unique:true,required:true,},
     shortCompanyId:{type:"Number",required:true,unique:true,default:0},
     noOfEmployee:{type:"Number",required:true,default:0},
     userId:{type:mongoose.Schema.Types.ObjectId,ref:"users",require:true},
@@ -11,8 +11,6 @@ export const companyschema=new mongoose.Schema({
     photoPath:{type:"String",require:true,default:"/website/default-company.webp"},
     time:{type:"Date",required:true,default:Date.now()},
 });
-
-companyschema.index({companyName:1,userId:1},{unique:true});
 
 
 companyschema.pre("save",async function(next){
@@ -27,10 +25,4 @@ companyschema.pre("save",async function(next){
         this.shortCompanyId=generatedUniqueNumber;
     }
     next();
-})
-
-companyschema.path("userId").validate(async function(value){
-    const count =await this.constructor.countDocuments({userId:value,companyName:this.companyName});
-    if(count&&count>1){return false}
-    return true;
 })
