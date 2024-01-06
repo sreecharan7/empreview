@@ -81,64 +81,11 @@ export class requestToUserRepository{
             throw new customError(400,"something went wromng , check details");
         }
     }
-
-
-    addRequest2=async (companyId,userId,note,adminId)=>{
+    deleteAllRequestRelatedToCompany=async(companyId)=>{
         try{
-            userId=new ObjectId(userId);
-            companyId=new ObjectId(companyId);
-            console.log(companyId);
-           const result=await requestToUserModel.aggregate([
-            {
-                "$facet":{
-                    "checkAnyRequst":[
-                        {
-                            "$match":{
-                                "$expr":{
-                                    "$and":[
-                                        {"$eq":["$companyId",companyId]},
-                                        {"$eq":["$userId",userId]}
-                                    ]
-                                }
-                            }
-                        }
-                    ],
-                    "CheckToEmployee":[
-                        {
-                            "$lookup":{
-                                from:"roles",
-                                let :{companyId,userId},
-                                pipeline:[
-                                    {
-                                        "$match":{
-                                            "$expr":{
-                                                "$and":[
-                                                    {"$eq":["$companyId","$$companyId"]},
-                                                    {"$eq":["$userId","$$userId"]}
-                                                ]
-                                            }
-                                        }
-                                    }
-                                ],
-                                as:"results"
-                            },
-                        }
-                    ]
-                }
-            },
-            {
-              $project: {
-                re:"$checkAnyRequst",
-                c:"$CheckToEmployee"
-              }
-            }
-              ]);
-        return result;
-              
+            await requestToUserModel.deleteMany({companyId});
+        }catch(err){
+            throw new customError(400,"something went wromng , check details");
         }
-        catch(err){
-            console.log(err);
-            throw new customError(400,"something went wrong with when adding the request to user");
-        }
-    };
+    }
 }

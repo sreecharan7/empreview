@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { rolesSchema } from "./roles.schema.js";
 import { customError } from "../../middlewares/error.middleware.js";
+import {ObjectId} from "mongodb";
 
 const rolesModel=mongoose.model("roles",rolesSchema);
 
@@ -98,6 +99,103 @@ export class rolesRepository{
             await increaseCount(request.companyId);
         }catch(err){
             throw new customError(400,"something went wrong changing the role");
+        }
+    }
+    dataOfEmployees=async (companyId)=>{
+        try{
+            const employees= await rolesModel.aggregate([
+                {
+                    "$match":{
+                        "companyId":new ObjectId(companyId),
+                        "role":"employee"
+                    }
+                },
+                {
+                "$lookup": {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'Data',
+                    }
+                },
+                {
+                    "$unwind":"$Data"
+                },
+                {
+                    "$project":{
+                        "name":"$Data.name",
+                        "about":"$Data.about",
+                        "photo":"$Data.photoPath",
+                    }
+                }
+            ]);
+            return employees;
+        }
+        catch(err){
+            console.log(err);
+            throw new customError(400,"something went wrong while computing the employees")
+        }
+    }
+    getTheDataOfEmployee=async (roleId)=>{
+        try{
+            const employee=await rolesModel.aggregate([
+                {
+                    "$match":{
+                        "_id":new ObjectId(roleId)
+                    }
+                },
+                {
+                    "$lookup": {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'Data',
+                        }
+                    },
+                    {
+                        "$unwind":"$Data"
+                    },
+                    {
+                        "$project":{
+                            "name":"$Data.name",
+                            "about":"$Data.about",
+                            "photo":"$Data.photoPath",
+                            "banner":"$Data.bannerPath",
+                            "companyId":"$companyId",
+                            "companyName":"$companyName",
+                            "role":"$role",
+                        }
+                    }
+            ]);
+            return employee;
+        }
+        catch(err){
+            console.log(err);
+            throw new customError(400,"something went wrong while computing the employees")
+        }
+    }
+    changeAdminToEmployee=async (roleId)=>{
+        try{
+            const role=await rolesModel.findOne({_id:roleId});
+            if(!role||role.role=="admin"){
+                await rolesModel.updateOne({_id:roleId},{$set:{role:"both"}});
+                increaseCount(role.companyId);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while changing the role");
+        }
+    }
+    deleteRoleByCompanyId=async (companyId)=>{
+        try{
+            await rolesModel.deleteMany({companyId});
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while deleting the role");
         }
     }
 }

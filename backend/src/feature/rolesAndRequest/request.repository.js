@@ -110,4 +110,12 @@ export class requestRepository{
             throw new customError(400,"something went wrong while computing the id");
         }
     }
+    deleteRequestByCompanyId=async (companyId)=>{
+        try{
+            await requestModel.deleteMany({companyId});
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while computing the id");
+        }
+    }
 }

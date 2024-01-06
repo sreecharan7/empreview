@@ -9,6 +9,9 @@ export const companyschema=new mongoose.Schema({
     about:{type:"String",require:true,default:""},
     photoName:{type:"String",require:true,default:"default-company.webp"},
     photoPath:{type:"String",require:true,default:"/website/default-company.webp"},
+    privateComment:{type:"Boolean",require:true,default:false},
+    NoComments:{type:"Boolean",require:true,default:false},
+    NoMoreComments:{type:"Boolean",require:true,default:false},
     time:{type:"Date",required:true,default:Date.now()},
 });
 

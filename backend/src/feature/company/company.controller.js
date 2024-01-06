@@ -1,6 +1,8 @@
 import { customError } from "../../middlewares/error.middleware.js";
 import { companyRepository } from "./company.repository.js";
-import {rolesRepository} from "../rolesAndRequest/roles.repository.js"
+import {rolesRepository} from "../rolesAndRequest/roles.repository.js";
+import { requestRepository } from "../rolesAndRequest/request.repository.js";
+import {requestToUserRepository} from "../requestToUser/requestToUser.repository.js"
 
 const isValidObjectId = (id) => {
     const objectIdPattern = /^[0-9a-fA-F]{24}$/;  
@@ -12,6 +14,8 @@ export class companyController{
     constructor(){
         this.companyRepository=new companyRepository();
         this.rolesRepository=new rolesRepository();
+        this.requestRepository=new requestRepository();
+        this.requestToUserRepository=new requestToUserRepository();
     }
     getCompanyDetails=async (req,res,next)=>{
         try{
@@ -88,6 +92,51 @@ export class companyController{
             let {companyId,roleId}=req.userData;
             const shortCompanyId= await this.companyRepository.resetTheShortCompanyId(companyId,roleId);
             res.json({status:true,msg:"successfully reset the company id",companyId:shortCompanyId});
+        }catch(err){
+            next(err);
+        }
+    }
+    deleteTheCompany=async(req,res,next)=>{
+        try{
+            let {companyId,role,roleId,userId}=req.userData;
+            if(!(companyId&&roleId&&role&&userId&&(role=="admin"||role=="both"))){
+                throw new customError(400,"check the roleid or you are not the admin");                
+            }
+            if(await this.companyRepository.deleteTheCompany(companyId,roleId,userId)){
+                await this.rolesRepository.deleteRoleByCompanyId(companyId);
+                await this.requestRepository.deleteRequestByCompanyId(companyId);
+                await this.requestToUserRepository.deleteAllRequestRelatedToCompany(companyId);
+                res.json({status:true,msg:"successfully deleted the company"});
+            }else{
+                throw new customError(400,"something went wrong while deleting the company");
+            }
+        }catch(err){
+            next(err);
+        }
+    }
+    upateOptionsOfTheCompany=async(req,res,next)=>{
+        try{
+            let {companyId,role,roleId}=req.userData;
+            if(!(companyId&&roleId&&role&&(role=="admin"||role=="both"))){
+                throw new customError(400,"check the roleid or you are not the admin");                
+            }
+            let {privateComment,NoComments,NoMoreComments}=req.body;
+            if(privateComment==undefined||NoComments==undefined||NoMoreComments==undefined){
+                throw new customError(400,"please give the all options");
+            }
+            await this.companyRepository.upateOptionsOfTheCompany(companyId,roleId,{privateComment,NoComments,NoMoreComments});
+            res.json({status:true,msg:"successfully updated the options"});
+        }catch(err){
+            next(err);
+        }
+    }
+    getOptionsOfTheCompany=async(req,res,next)=>{
+        try{
+            let companyId=req.body["companyId"];
+            if(!companyId&&req["userData"]&&req.userData["cookieData"]){companyId=req.userData.cookieData["companyId"];}
+            if(!companyId){throw new customError(400,"please give the companyId");}
+            const options=await this.companyRepository.getCompanyOptions(companyId);
+            res.json({status:true,data:options});
         }catch(err){
             next(err);
         }

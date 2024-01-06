@@ -156,12 +156,50 @@ export class companyRepository{
             }
         }
     }
-    deleteCompant=async (companyId,roleId,userId)=>{
+    deleteTheCompany=async (companyId,roleId,userId)=>{
         try{
-
+            let company=await this.checkTheAdminUseCompanyIdAndGetData(companyId,roleId);
+            
+            if(company.userId!=userId){
+                throw new customError(400,"you are not supreme admin,to delete");
+            }
+            
+            await companyModel.deleteOne({_id:companyId});
+            
+            return true;
         }
         catch(err){
-            throw new customError(400,"something went wrong while deleting the company");
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while deleting the company");
+            }
+        }
+    }
+    upateOptionsOfTheCompany=async (companyId,roleId,options)=>{
+        try{
+            let company=await this.checkTheAdminUseCompanyIdAndGetData(companyId,roleId);
+            company.privateComment=options.privateComment;
+            company.NoComments=options.NoComments;
+            company.NoMoreComments=options.NoMoreComments;
+            await company.save();
+            return true;
+        }
+        catch(err){
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while updating the company options");
+            }
+        }
+    }
+    getCompanyOptions=async (companyId)=>{
+        try{
+            let company=await companyModel.findById(companyId,"privateComment NoComments NoMoreComments -_id");
+            if(!company){throw new customError(400,"Company not found with the company id");}
+            return company;
+        }catch(err){
+            throw new customError(400,"something went wrong while getting the company options");
         }
     }
 }

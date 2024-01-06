@@ -2,6 +2,7 @@ import { customError } from "../../middlewares/error.middleware.js";
 import { requestRepository } from "./request.repository.js";
 import { rolesRepository } from "./roles.repository.js";
 import { companyRepository } from "../company/company.repository.js";
+import jwt from "jsonwebtoken";
 export class rolesAndRequestController{
     constructor(){
         this.requestRepository=new requestRepository();
@@ -112,6 +113,44 @@ export class rolesAndRequestController{
             await this.requestRepository.deleteRequest(requestId);
             res.json({status:true,msg:"sucessfuly, remove the request"});
             
+        }catch(err){
+            next(err);
+        }
+    }
+    dataOfEmployees=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            //should handle when the admin is removed when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            const employees=await this.rolesRepository.dataOfEmployees(companyId);
+            res.json({status:true,data:employees});
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    changeAdminToEmployee=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            const roleId=req.userData.roleId;
+            //should handle when the admin is removed when he is logined
+            if(!companyId&&!(role=="admin")&&!roleId){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+        
+            if(await this.rolesRepository.changeAdminToEmployee(roleId)){
+                req.userData.cookieData["role"]="both";
+                var token=jwt.sign(req.userData.cookieData, process.env.jwt);
+                res.cookie(process.env.cookieNameUserCredientails,token,{maxAge: parseInt(process.env.expoireOfCookieUserCredientails)});
+                res.json({status:true,msg:"sucessfuly changed admin to employee"});
+            }
+            else{
+                throw new customError(400,"you may be aldready employee and admin , or roleid is in correct");
+            }
         }catch(err){
             next(err);
         }

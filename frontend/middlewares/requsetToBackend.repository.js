@@ -19,4 +19,8 @@ export class requestToBackend{
         let a=await this.requestToUserRepository.companyDetailsToUser(companyId,userId);
         return a;
     }
+    getTheDataOfEmployee=async (roleId)=>{
+        const employee=await this.rolesRepository.getTheDataOfEmployee(roleId);
+        return employee;
+    }
 }

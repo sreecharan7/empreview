@@ -34,8 +34,16 @@ app.get("/v/a",(req,res,next)=>{
 app.get("/v/a/about",authorization,(req,res,next)=>{viewC.adminViewAbout(req,res,next);});
 
 app.get("/v/a/add",authorization,(req,res,next)=>{viewC.addEmployee(req,res,next)});
+app.get("/v/a/employee",authorization,(req,res,next)=>{viewC.organisationEmployeePage(req,res,next)});
+app.get("/v/a/settings",authorization,(req,res,next)=>{viewC.adminViewSettings(req,res,next);});
 
 app.get("/v/r",authorization,(req,res,next)=>{viewC.requestToUserPage(req,res,next);})
+
+app.get("/v/e",(req,res,next)=>{
+    req["StoreCokkieData"]=true;
+    authorization(req,res,next);
+},(req,res,next)=>{viewC.employeeViewHome(req,res,next);});
+
 app.use((req,res,next)=>{res.status(404).render("404",{javascript:null,title:"Page not found"})});
 
 export default app;

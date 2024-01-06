@@ -16,7 +16,7 @@ function createOrganisationModelSetter(){
                 </div>
             </div>
             <div>
-            <a href="#" onclick="alert('**Once you create the organisation you will become the admin you will able add employee, you can use another email to join as employee**')">Know more!</a>
+            <a href="#" onclick="alert('**Once you create the organisation you will become the admin you will able add employee, you can use another email to join as employee, reload page to see changes**')">Know more!</a>
             </div>
     </div>`;
     modalFooter.innerHTML=`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -118,6 +118,29 @@ function formatDate(inputDate) {
     return `${months[monthIndex]}-${year}`;
 }
 
+function getBoxData(i,r,d=''){
+    let type="admin",button='';
+    if(r=="e")type="employee";
+    if(d=="both"){
+        d='';
+        button=`<a class="btn btn-primary  col-6" href="/v/a?r=${i._id}">admin page</a>`;
+    }
+    let box=`<div class="card me-1 mt-1 glass" aria-hidden="true" style="width:300px;">
+                        <div class="card-body">
+                          <h5 class="card-title ">
+                            <span class="col-6">${i.companyName}</span>
+                          </h5>
+                          <p class="text-end">
+                            ${formatDate(i.time)}
+                          </p>
+                          <div class="d-flex">
+                          ${button}
+                          <a class="btn btn-primary  col-6 ${d} ms-2" href="/v/${r}?r=${i._id}">${type} page</a>\
+                          </div>
+                        </div>
+                      </div>`;
+    return box;
+}
 function getThedata(element){
         const requestBox=document.getElementById("request-organisations-shower");
         const adminBox=document.getElementById("admin-organisations-shower");
@@ -145,30 +168,20 @@ function getThedata(element){
                     bothBox.innerHTML='';
                 }
                 for (let i of response.roles){
-                    let box=`<div class="card me-1 mt-1 glass" aria-hidden="true" style="width:300px;">
-                        <div class="card-body">
-                          <h5 class="card-title ">
-                            <span class="col-6">${i.companyName}</span>
-                          </h5>
-                          <p class="text-end">
-                            ${formatDate(i.time)}
-                          </p>
-                          <a class="btn btn-primary  col-6" href="/v/a?r=${i._id}">go to edit</a>
-                        </div>
-                      </div>`
+                    
                     if(i.role=="admin"){
-                        adminBox.innerHTML+=box;
+                        adminBox.innerHTML+=getBoxData(i,"a");
                     }
                     else if (i.role=="employee"){
                         if(element){
-                            requestBox.innerHTML+=box;
+                            requestBox.innerHTML+=getBoxData(i,"e","d-none");
                         }
                         else{
-                            employeeBox.innerHTML+=box;
+                            employeeBox.innerHTML+=getBoxData(i,"e");
                         }
                     }
                     else if(i.role=="both"){
-                        bothBox.innerHTML+=box;
+                        bothBox.innerHTML+=getBoxData(i,"e","both");
                     }
                 }
                 if(adminBox.innerHTML=='')adminBox.innerHTML=`<div class="ms-4 h2">There is no organisation you created</div>`;

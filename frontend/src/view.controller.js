@@ -66,8 +66,8 @@ export class viewController{
                 return;
             }
             let roleId=req.query.r
-            if(!roleId){
-                await res.render("adminViewHome",{title:"Company",javascript:null,companyName:req.userData["companyName"]});
+            if(!roleId||roleId==req.userData["roleId"]){
+                await res.render("adminViewHome",{title:"Company",javascript:null,companyName:req.userData["companyName"],role:req.userData["role"]});
                 return;
             }
             let role=await this.requestToBackend.checkTheCompanyToUserIdToAdmin(req.userData.userId,roleId);
@@ -78,7 +78,7 @@ export class viewController{
                 req.userData.cookieData["roleId"]=role._id;
                 var token=jwt.sign(req.userData.cookieData, process.env.jwt);
                 res.cookie(process.env.cookieNameUserCredientails,token,{maxAge: parseInt(process.env.expoireOfCookieUserCredientails)});
-                await res.render("adminViewHome",{title:"Company",javascript:null,companyName:role.companyName});
+                await res.render("adminViewHome",{title:"Company",javascript:null,companyName:role.companyName,role:role.role});
             }
             else{
                 res.redirect("/404");
@@ -125,6 +125,59 @@ export class viewController{
             else{
                 await res.render("requestToUserPage",{title:"add employee",javascript:`<script type="text/javascript" src="/javascript/requestToUserPage.js" ></script>`,re});
             }
+        }catch(err){
+            next(err);
+        }
+    }
+    organisationEmployeePage=async(req,res,next)=>{
+        try{
+            if(!(req.userData["companyId"]&&(req.userData["role"]=="admin"||req.userData["role"]=="both"))){
+                await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            await res.render("organisationEmployee",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/organisationEmployee.js"></script>`});
+        }catch(err){
+            next(err);
+        }
+    }
+    employeeViewHome=async(req,res,next)=>{
+        try{
+            if(!(isValidObjectId(req.query.r)||(req.userData["companyId"]&&(req.userData["role"]=="employee")))){
+                res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            let roleId=req.query.r;
+            if(!roleId){roleId=req.userData["roleId"];}
+            let data=await this.requestToBackend.getTheDataOfEmployee(roleId);
+            if(data.length==0){
+                res.redirect("/404");
+                return;
+            }
+                data=data[0];
+                req.userData.cookieData["companyId"]=data.companyId;
+                req.userData.cookieData["role"]=data.role;
+                req.userData.cookieData["companyName"]=data.companyName;
+                req.userData.cookieData["roleId"]=data._id;
+                var token=jwt.sign(req.userData.cookieData, process.env.jwt);
+                res.cookie(process.env.cookieNameUserCredientails,token,{maxAge: parseInt(process.env.expoireOfCookieUserCredientails)});
+                if(data.role=='admin'){
+                    res.redirect("/v/a");
+                    return;
+                }
+            if(data.banner!="lightgrey"){data.banner=`url(${data.banner})`}
+
+            await res.render("employeeHomeView",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/employeeHomeView.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner});
+        }catch(err){
+            next(err);
+        }
+    }
+    adminViewSettings=async(req,res,next)=>{
+        try{
+            if(!(req.userData["companyId"]&&(req.userData["role"]=="admin"||req.userData["role"]=="both"))){
+                await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            await res.render("adminSettingPage",{title:"Setting",javascript:`<script type="text/javascript" src="/javascript/adminSettingPage.js"></script>`});
         }catch(err){
             next(err);
         }
