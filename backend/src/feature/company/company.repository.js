@@ -179,6 +179,7 @@ export class companyRepository{
     upateOptionsOfTheCompany=async (companyId,roleId,options)=>{
         try{
             let company=await this.checkTheAdminUseCompanyIdAndGetData(companyId,roleId);
+            company.EachOtherComments=options.EachOtherComments;
             company.privateComment=options.privateComment;
             company.NoComments=options.NoComments;
             company.NoMoreComments=options.NoMoreComments;
@@ -195,7 +196,7 @@ export class companyRepository{
     }
     getCompanyOptions=async (companyId)=>{
         try{
-            let company=await companyModel.findById(companyId,"privateComment NoComments NoMoreComments -_id");
+            let company=await companyModel.findById(companyId,"EachOtherComments privateComment NoComments NoMoreComments -_id");
             if(!company){throw new customError(400,"Company not found with the company id");}
             return company;
         }catch(err){

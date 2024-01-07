@@ -1,6 +1,7 @@
 const privateInput=document.getElementById("PrivateInput");
 const NoCommentsInput=document.getElementById("NoCommentsInput");
 const NoMoreCommentsInput=document.getElementById("NoMoreCommentsInput");
+const EachOtherComments=document.getElementById("EachOtherComments");
 
 window.addEventListener('load', function() {
     alertToast("Loading...");
@@ -57,9 +58,11 @@ function getOptions(){
                 privateInput.checked=response.data.privateComment;
                 NoCommentsInput.checked=response.data.NoComments;
                 NoMoreCommentsInput.checked=response.data.NoMoreComments;
+                EachOtherComments.checked=response.data.EachOtherComments;
                 privateInput.disabled=false;
                 NoCommentsInput.disabled=false;
                 NoMoreCommentsInput.disabled=false;
+                EachOtherComments.disabled=false;
             }
             else{
                 alertToast(response.msg);
@@ -71,6 +74,7 @@ function getOptions(){
 
 function updateModalSetter(){
     var data={
+        EachOtherComments:EachOtherComments.checked,
         privateComment:privateInput.checked,
         NoComments:NoCommentsInput.checked,
         NoMoreComments:NoMoreCommentsInput.checked

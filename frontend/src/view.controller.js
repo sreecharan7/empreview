@@ -142,7 +142,7 @@ export class viewController{
     }
     employeeViewHome=async(req,res,next)=>{
         try{
-            if(!(isValidObjectId(req.query.r)||(req.userData["companyId"]&&(req.userData["role"]=="employee")))){
+            if(!(isValidObjectId(req.query.r)||(req.userData["companyId"]&&(req.userData["role"]=="employee"||req.userData["role"]=="both")))){
                 res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
                 return;
             }
@@ -164,7 +164,7 @@ export class viewController{
                     res.redirect("/v/a");
                     return;
                 }
-            if(data.banner!="lightgrey"){data.banner=`url(${data.banner})`}
+            // if(data.banner!="lightgrey"){data.banner=`url(${data.banner})`}
 
             await res.render("employeeHomeView",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/employeeHomeView.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner});
         }catch(err){
@@ -178,6 +178,17 @@ export class viewController{
                 return;
             }
             await res.render("adminSettingPage",{title:"Setting",javascript:`<script type="text/javascript" src="/javascript/adminSettingPage.js"></script>`});
+        }catch(err){
+            next(err);
+        }
+    }
+    employeeCommentPage=async(req,res,next)=>{
+        try{
+            if(!(req.userData["companyId"]&&(req.userData["role"]=="employee"||req.userData["role"]=="both"))){
+                await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            await res.render("employeeCommentPage",{title:"Comment",javascript:`<script type="text/javascript" src="/javascript/employeeCommentPage.js"></script>`});
         }catch(err){
             next(err);
         }

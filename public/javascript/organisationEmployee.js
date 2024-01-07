@@ -81,6 +81,32 @@ var truncateStyles = {
     xhr.send();
 }
 
+
+function findAndHighlightInDiv(searchTerm) {
+    if (employeeBoxFromCompany && window.find && window.getSelection) {
+        var removeHighlights = document.querySelectorAll('.highlight');
+        removeHighlights.forEach(function (highlight) {
+            highlight.classList.remove('highlight');
+        });
+
+        document.designMode = "on";
+        var sel = window.getSelection();
+        sel.collapse(employeeBoxFromCompany, 0);
+
+        while (window.find(searchTerm)) {
+            document.execCommand("HiliteColor", false, "yellow");
+            sel.collapseToEnd();
+            var range = sel.getRangeAt(0);
+            var span = document.createElement('span');
+            span.className = 'highlight';
+            range.surroundContents(span);
+        }
+
+        document.designMode = "off";
+    }
+}
+
+
 function searchFormSubmission(event){
     event.preventDefault();
     var formData= new FormData(this);
@@ -94,6 +120,7 @@ function searchFormSubmission(event){
     for(let i of arr){
         employeeBoxFromCompany.innerHTML=employeeBoxFromCompany.innerHTML+requestBoxMaker(i);
     }
+    findAndHighlightInDiv(formData.get("search"));
     alertToast("Searched for the keyword");
 }
 function searchGivenInput(data){

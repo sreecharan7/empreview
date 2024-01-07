@@ -106,8 +106,15 @@ export class rolesRepository{
             const employees= await rolesModel.aggregate([
                 {
                     "$match":{
-                        "companyId":new ObjectId(companyId),
-                        "role":"employee"
+                        $and: [
+                            {"companyId":new ObjectId(companyId)},
+                            {
+                              $or: [
+                                { role: "employee" },
+                                { role: "both" }
+                              ]
+                            }
+                          ]
                     }
                 },
                 {
@@ -196,6 +203,111 @@ export class rolesRepository{
         }
         catch(err){
             throw new customError(400,"something went wrong while deleting the role");
+        }
+    }
+    getDetaisOfEmployeesOfCommenters=async (roleId)=>{
+        try{
+           const employees=await rolesModel.aggregate([
+                {
+                    "$match":{
+                        "_id":new ObjectId(roleId)
+                    }
+                },
+                {
+                    "$unwind":"$allowedtoComment"
+                },
+                {
+                    $lookup: {
+                        from: "roles",     
+                        localField: "allowedtoComment",   
+                        foreignField: "_id",        
+                        as: "details"           
+                    }
+                },
+                {
+                    "$unwind":"$details"
+                },
+                {
+                    $lookup: {
+                        from: "users",     
+                        localField: "details.userId",   
+                        foreignField: "_id",        
+                        as: "usersDetails"           
+                    }
+                },
+                {
+                    "$unwind":"$usersDetails"
+                },
+                {
+                    "$project":{
+                        "_id":0,
+                        "name":"$usersDetails.name",
+                        "about":"$usersDetails.about",
+                        "photo":"$usersDetails.photoPath",
+                        "banner":"$usersDetails.bannerPath",
+                        "companyId":"$details.companyId",
+                        "roleId":"$details._id",
+                        "rating":"$details.rating",
+                        "noOfrating":"$details.noOfRating",
+                    }
+                }
+            ]);
+            return employees;
+        }catch(err){
+            console.log(err);
+            throw new customError(400,"something went wrong while getting the details of the employees");
+        }
+    }
+    getDetaisOfEmployeesOfCommentersUsingCompanyId=async (companyId,rolesId)=>{
+
+        try{
+           const employees=await rolesModel.aggregate([
+                {
+                    "$match":{
+                        $and: [
+                            {"companyId":new ObjectId(companyId)},
+                            {
+                              $or: [
+                                { role: "employee" },
+                                { role: "both" }
+                              ]
+                            },
+                            {
+                                _id:{$not:{ $eq: new ObjectId(rolesId) }}
+                            }
+                        ],
+                        
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "users",     
+                        localField: "userId",   
+                        foreignField: "_id",        
+                        as: "usersDetails"           
+                    }
+                },
+                {
+                    "$unwind":"$usersDetails"
+                },
+                {
+                    "$project":{
+                        "_id":0,
+                        "name":"$usersDetails.name",
+                        "about":"$usersDetails.about",
+                        "photo":"$usersDetails.photoPath",
+                        "banner":"$usersDetails.bannerPath",
+                        "companyId":"$details.companyId",
+                        "roleId":"$_id",
+                        "rating":"$rating",
+                        "noOfrating":"$noOfRating",
+                    }
+                }
+            ]);
+            return employees;
+        }catch(err){
+            console.log(err);
+            throw new customError(400,"something went wrong while getting the details of the employees");
         }
     }
 }

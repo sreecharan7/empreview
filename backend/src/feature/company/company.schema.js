@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 
+
 export const companyschema=new mongoose.Schema({
     companyName:{type:"String",unique:true,required:true,},
     shortCompanyId:{type:"Number",required:true,unique:true,default:0},
@@ -9,6 +10,7 @@ export const companyschema=new mongoose.Schema({
     about:{type:"String",require:true,default:""},
     photoName:{type:"String",require:true,default:"default-company.webp"},
     photoPath:{type:"String",require:true,default:"/website/default-company.webp"},
+    EachOtherComments:{type:"Boolean",require:true,default:false},
     privateComment:{type:"Boolean",require:true,default:false},
     NoComments:{type:"Boolean",require:true,default:false},
     NoMoreComments:{type:"Boolean",require:true,default:false},

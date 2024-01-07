@@ -16,4 +16,5 @@ app.delete("/revertRequest",authorization,(req,res,next)=>{rolesAndRequestC.reve
 
 app.get("/dataEmployees",authorization,(req,res,next)=>{rolesAndRequestC.dataOfEmployees(req,res,next)});
 
+app.get("/dataCommetsEmployee",authorization,(req,res,next)=>{rolesAndRequestC.getAllowedCommentUserDetails(req,res,next)});
 export default app;

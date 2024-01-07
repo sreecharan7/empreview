@@ -155,4 +155,27 @@ export class rolesAndRequestController{
             next(err);
         }
     }
+    getAllowedCommentUserDetails=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            const roleId=req.userData.roleId;
+            let data;
+            if(!companyId&&!(role=="employee"||role=="both")){
+                throw new customError(400,"please change the role to employee to get the details");
+            }
+            let b=await this.companyRepository.getCompanyOptions(companyId);
+            b=b["EachOtherComments"];
+            if(b){
+                data=await this.rolesRepository.getDetaisOfEmployeesOfCommentersUsingCompanyId(companyId,roleId);
+            }
+            else{
+                data=await this.rolesRepository.getDetaisOfEmployeesOfCommenters(roleId);
+            }
+            res.json({status:true,data:data});
+        }
+        catch(err){
+            next(err);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 const requestsBoxFromCompany=document.getElementById("requests-box-from-company");
 const searchForm=document.getElementById("search-form");
+const searchBoxInput=searchForm.querySelector("input");
 const backButton=document.getElementById("back-button");
 const mainPage=document.getElementById("main-page");
 const addRequestBoxShow=document.getElementById("addRequestBoxShow");
@@ -31,6 +32,7 @@ function BackFunction(){
         mainPage.classList.remove("d-none");
         addRequestBoxShow.classList.add("d-none");
         addNewEmployeeBox.classList.add("d-none");
+        searchBoxInput.value='';
         b=0; 
     }
 }
@@ -107,11 +109,11 @@ var truncateStyles = {
 
   function requestBoxMaker(i){
     var box=`<div class="col" id="${i._id}">
-                    <a style="text-decoration: none;">
-                    <div class="card mb-3 custom-card glass" style="max-width: 540px;">
-                        <div class="row g-0">
-                        <div class="col-4 ">
-                            <img src="${i.photo}" class="img-fluid rounded-start" alt="image of the employee" style="height: 180px;width: 100%; object-fit:cover">
+                    <a style="text-decoration: none; ">
+                    <div class="card mb-3 custom-card glass" style="max-width: 540px; ">
+                        <div class="row g-0" >
+                        <div class="col-4 " >
+                            <img src="${i.photo}" class="img-fluid rounded-start" alt="image of the employee" style="height: 100%;width: 100%; object-fit:contain">
                         </div>
                         <div class="col-8">
                             <div class="card-body">
@@ -219,11 +221,39 @@ function approve(requestId){
     setInterval(()=>{a.remove();removeFromArray(requestId);},1500);
 }
 
+
+function findAndHighlightInDiv(searchTerm) {
+    if (requestsBoxFromCompany && window.find && window.getSelection) {
+
+        var removeHighlights = document.querySelectorAll('.highlight');
+        removeHighlights.forEach(function (highlight) {
+            highlight.classList.remove('highlight');
+        });
+
+        document.designMode = "on";
+        var sel = window.getSelection();
+        sel.collapse(requestsBoxFromCompany, 0);
+
+        while (window.find(searchTerm)) {
+            document.execCommand("HiliteColor", false, "yellow");
+            sel.collapseToEnd();
+            var range = sel.getRangeAt(0);
+            var span = document.createElement('span');
+            span.className = 'highlight';
+            range.surroundContents(span);
+        }
+
+        document.designMode = "off";
+    }
+}
+
+
 function searchFormSubmission(event){
     event.preventDefault();
     var formData= new FormData(this);
     var arr=searchGivenInput(formData.get("search"));
     requestsBoxFromCompany.innerHTML='';
+    alertToast("Searching...");
     if(arr.length==0){
         requestsBoxFromCompany.innerHTML=`<h3 class="text-center" style="width:600px" >There is no request to the keyword</h3>`;
         return;
@@ -231,6 +261,8 @@ function searchFormSubmission(event){
     for(let i of arr){
         requestsBoxFromCompany.innerHTML=requestsBoxFromCompany.innerHTML+requestBoxMaker(i);
     }
+    findAndHighlightInDiv(formData.get("search"));
+    alertToast("Searched for the keyword");
 }
 function searchGivenInput(data){
     data=data.trim();

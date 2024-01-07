@@ -7,7 +7,7 @@ export const userSchema=mongoose.Schema({
     name:{type:"String",required:true,index:true},
     about:{type:"String",required:true},
     photoPath:{type:"String",required:true,default:"/website/default-photo.svg"},
-    bannerPath:{type:"String",required:true,default:"lightgrey"},
+    bannerPath:{type:"String",required:true,default:"default"},
     photoOriginalName:{type:"String",required:true,default:"default-photo.svg"},
     bannerOriginalName:{type:"String",required:true,default:"default-banner.png"},
     connectionId:{type:"Number",required:true,default:0},
