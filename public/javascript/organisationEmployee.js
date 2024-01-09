@@ -30,7 +30,7 @@ var truncateStyles = {
   }
 
   function requestBoxMaker(i){
-    var box=`<div class="col" id="${i._id}">
+    var box=`<div class="col" id="${i._id}" style="height:150px">
                     <a style="text-decoration: none;" href="./employee/${i._id}">
                     <div class="card mb-3 custom-card glass" style="max-width: 540px;">
                         <div class="row g-0">
@@ -39,7 +39,7 @@ var truncateStyles = {
                         </div>
                         <div class="col-8">
                             <div class="card-body">
-                            <h5 class="card-title" id="highlight-text">Name:- ${i.name}</h5>
+                            <h5 class="card-title" id="highlight-text" onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; cursor: pointer;"><small class="text-body-secondary">Name:- ${i.name}</h5>
                             <br>
                             <p class="card-text"  onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; cursor: pointer;"><small class="text-body-secondary" >About:- ${i.about}</small></p>
                             </div>

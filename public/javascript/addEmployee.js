@@ -108,18 +108,18 @@ var truncateStyles = {
   }
 
   function requestBoxMaker(i){
-    var box=`<div class="col" id="${i._id}">
-                    <a style="text-decoration: none; ">
-                    <div class="card mb-3 custom-card glass" style="max-width: 540px; ">
-                        <div class="row g-0" >
-                        <div class="col-4 " >
-                            <img src="${i.photo}" class="img-fluid rounded-start" alt="image of the employee" style="height: 100%;width: 100%; object-fit:contain">
+    var box=`<div class="col"  style="cursor: pointer; height:170px" id="${i._id}">
+                    <a style="text-decoration: none;"  style="height: 100%;">
+                    <div class="card mb-3 custom-card glass" style="max-width: 540px; height: 100%;">
+                        <div class="row g-0" style="height: 100%;">
+                        <div class="col-4 " style="height: 100%;">
+                            <img src="${i.photo}" class="img-fluid rounded-start" alt="image of the employee" style="height: 100%;width: 100%; object-fit:cover">
                         </div>
                         <div class="col-8">
                             <div class="card-body">
-                            <h5 class="card-title" id="highlight-text">${i.name}</h5>
-                            <p class="card-text" onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; cursor: pointer;">Note:- ${i.note}</p>
+                            <h5 class="card-title" id="highlight-text"onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; cursor: pointer;"><small class="text-body-secondary">Name:- ${i.name}</h5>
                             <p class="card-text"  onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; cursor: pointer;"><small class="text-body-secondary" >About:- ${i.about}</small></p>
+                            <p class="card-text"  onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; cursor: pointer;"><small class="text-body-secondary" >Note:- ${i.note}</small></p>
                             <div>
                                 <button type="button" class="btn btn-success btn-sm" onclick="approve('${i._id}')">Approve</button>
                                 <button type="button" class="btn btn-danger btn-sm" onclick="reject('${i._id}')">Reject</button>
@@ -132,6 +132,7 @@ var truncateStyles = {
                 </div>`;
                 return box;
   }
+
 
   function dataRequestsSentToCompany(){
     var xhr = new XMLHttpRequest();

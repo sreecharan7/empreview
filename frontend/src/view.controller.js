@@ -188,7 +188,7 @@ export class viewController{
                 await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
                 return;
             }
-            await res.render("employeeCommentPage",{title:"Comment",javascript:`<script type="text/javascript" src="/javascript/employeeCommentPage.js"></script>`});
+            await res.render("employeeCommentPage",{title:"Comment",javascript:`<script type="text/javascript" src="/javascript/employeeCommentPage.js"></script>`,css:"body { font-family: Arial, sans-serif; } .rating { display: inline-block; } .rating input { display: none; } .rating label { cursor: pointer; font-size: 36px; color: #ccc; float: right; } .rating label:before { content: '\\2605'; } .rating input:checked ~ label { color: #ffc107; } .rating label:hover, .rating input:checked ~ label:hover { color: #ffcc00; }"});
         }catch(err){
             next(err);
         }

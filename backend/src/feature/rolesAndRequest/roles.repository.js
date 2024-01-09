@@ -300,7 +300,7 @@ export class rolesRepository{
                         "companyId":"$details.companyId",
                         "roleId":"$_id",
                         "rating":"$rating",
-                        "noOfrating":"$noOfRating",
+                        "noOfRating":"$noOfRating",
                     }
                 }
             ]);
