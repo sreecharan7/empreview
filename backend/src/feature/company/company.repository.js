@@ -12,6 +12,7 @@ export class companyRepository{
             return await newCompany;
         }
         catch(err){
+            console.log(err);
             throw new customError(400,"organisation name is is aldready exist , choose another");
         }
     }
@@ -36,6 +37,7 @@ export class companyRepository{
                 company.noOfEmployee-=employeeNumber;
             }
             await company.save();
+            return company;
         }
         catch(err){
             throw new customError(400,"something went wrong while changing the emplyoees");
@@ -179,10 +181,13 @@ export class companyRepository{
     upateOptionsOfTheCompany=async (companyId,roleId,options)=>{
         try{
             let company=await this.checkTheAdminUseCompanyIdAndGetData(companyId,roleId);
-            company.EachOtherComments=options.EachOtherComments;
-            company.privateComment=options.privateComment;
-            company.NoComments=options.NoComments;
-            company.NoMoreComments=options.NoMoreComments;
+            company.options.EachOtherComments=options.EachOtherComments;
+            company.options.privateComment=options.privateComment;
+            company.options.userNoComments=options.userNoComments;
+            company.options.NoMoreComments=options.NoMoreComments;
+            company.options.showPrivateComment=options.showPrivateComment;
+            company.options.showNoComments=options.showNoComments;
+            company.options.defaultNoOfComments=options.defaultNoOfComments;
             await company.save();
             return true;
         }
@@ -196,9 +201,9 @@ export class companyRepository{
     }
     getCompanyOptions=async (companyId)=>{
         try{
-            let company=await companyModel.findById(companyId,"EachOtherComments privateComment NoComments NoMoreComments -_id");
+            let company=await companyModel.findById(companyId,"options -_id");
             if(!company){throw new customError(400,"Company not found with the company id");}
-            return company;
+            return company.options;
         }catch(err){
             throw new customError(400,"something went wrong while getting the company options");
         }

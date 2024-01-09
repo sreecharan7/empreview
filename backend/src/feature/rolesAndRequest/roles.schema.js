@@ -10,6 +10,7 @@ export const rolesSchema=new mongoose.Schema({
     allowedtoComment:{type:[mongoose.Schema.Types.ObjectId],ref:"roles",require:true,default:[]},
     rating:{type:"Number",default:0,require:true},
     noOfRating:{type:"Number",default:0,require:true},
+    noOfCommentsAllowed:{type:"Number",default:0,require:true},
     time:{type:"Date",required:true,default:Date.now()}
 });
 

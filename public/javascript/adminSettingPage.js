@@ -1,7 +1,5 @@
-const privateInput=document.getElementById("PrivateInput");
-const NoCommentsInput=document.getElementById("NoCommentsInput");
-const NoMoreCommentsInput=document.getElementById("NoMoreCommentsInput");
-const EachOtherComments=document.getElementById("EachOtherComments");
+const inputGroup=document.getElementById("input-group-div").querySelectorAll("input");
+const saveButton=document.getElementById("save-button");
 
 window.addEventListener('load', function() {
     alertToast("Loading...");
@@ -55,14 +53,19 @@ function getOptions(){
         if (xhr.readyState == 4) {
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==200){
-                privateInput.checked=response.data.privateComment;
-                NoCommentsInput.checked=response.data.NoComments;
-                NoMoreCommentsInput.checked=response.data.NoMoreComments;
-                EachOtherComments.checked=response.data.EachOtherComments;
-                privateInput.disabled=false;
-                NoCommentsInput.disabled=false;
-                NoMoreCommentsInput.disabled=false;
-                EachOtherComments.disabled=false;
+                inputGroup[0].checked=response.data.EachOtherComments;
+                inputGroup[1].checked=response.data.privateComment;
+                inputGroup[2].checked=response.data.userNoComments;
+                inputGroup[3].checked=response.data.NoMoreComments;
+                inputGroup[4].checked=response.data.showPrivateComment;
+                inputGroup[5].checked=response.data.showNoComments;
+
+                inputGroup.forEach((element)=>{element.disabled=false;});
+
+                inputGroup[inputGroup.length-1].value=response.data.defaultNoOfComments;
+                inputGroup[inputGroup.length-1].readOnly=false;
+
+                saveButton.disabled=false;
             }
             else{
                 alertToast(response.msg);
@@ -74,10 +77,13 @@ function getOptions(){
 
 function updateModalSetter(){
     var data={
-        EachOtherComments:EachOtherComments.checked,
-        privateComment:privateInput.checked,
-        NoComments:NoCommentsInput.checked,
-        NoMoreComments:NoMoreCommentsInput.checked
+        EachOtherComments:inputGroup[0].checked,
+        privateComment:inputGroup[1].checked,
+        userNoComments:inputGroup[2].checked,
+        NoMoreComments:inputGroup[3].checked,
+        showPrivateComment:inputGroup[4].checked,
+        showNoComments:inputGroup[5].checked,
+        defaultNoOfComments:inputGroup[inputGroup.length-1].value,
     }
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", "/api/company/updateOptions", true);

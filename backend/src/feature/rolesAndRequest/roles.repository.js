@@ -6,7 +6,7 @@ import {ObjectId} from "mongodb";
 const rolesModel=mongoose.model("roles",rolesSchema);
 
 export class rolesRepository{
-    addNewRole=async (role,userId,companyId,companyName)=>{
+    addNewRole=async (role,userId,companyId,companyName,noOfCommentsAllowed)=>{
         try{
             let newRole;
             if(role==="admin"){
@@ -15,7 +15,7 @@ export class rolesRepository{
                 
             }
             else{
-                newRole=await rolesModel.create({role:"employee",userId,companyId,companyName});
+                newRole=await rolesModel.create({role:"employee",userId,companyId,companyName,noOfCommentsAllowed});
             }
             return newRole;
         }
@@ -95,8 +95,8 @@ export class rolesRepository{
     }
     changeRequestToRole=async (request)=>{
         try{
-            await this.addNewRole("employee",request.userId,request.companyId,request.companyName);
-            await increaseCount(request.companyId);
+            const company=await increaseCount(request.companyId);
+            await this.addNewRole("employee",request.userId,request.companyId,request.companyName,company.options.defaultNoOfComments);
         }catch(err){
             throw new customError(400,"something went wrong changing the role");
         }
@@ -185,8 +185,8 @@ export class rolesRepository{
         try{
             const role=await rolesModel.findOne({_id:roleId});
             if(!role||role.role=="admin"){
-                await rolesModel.updateOne({_id:roleId},{$set:{role:"both"}});
-                increaseCount(role.companyId);
+                const company=await increaseCount(role.companyId);
+                await rolesModel.updateOne({_id:roleId},{$set:{role:"both",noOfCommentsAllowed:company.options.defaultNoOfComments}});
                 return true;
             }
             else{
@@ -315,5 +315,5 @@ export class rolesRepository{
 import {companyRepository} from "../company/company.repository.js"
 const companyR=new companyRepository();
 async function increaseCount(companyId){
-    await companyR.addOrRemoveEmployee(companyId,1,"+")
+    return await companyR.addOrRemoveEmployee(companyId,1,"+")
 }

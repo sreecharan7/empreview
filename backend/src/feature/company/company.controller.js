@@ -120,11 +120,13 @@ export class companyController{
             if(!(companyId&&roleId&&role&&(role=="admin"||role=="both"))){
                 throw new customError(400,"check the roleid or you are not the admin");                
             }
-            let {privateComment,NoComments,NoMoreComments,EachOtherComments}=req.body;
-            if(privateComment==undefined||NoComments==undefined||NoMoreComments==undefined||EachOtherComments==undefined){
+            let {privateComment,userNoComments,NoMoreComments,EachOtherComments,showPrivateComment,showNoComments,defaultNoOfComments}=req.body;
+            if(privateComment==undefined||userNoComments==undefined||NoMoreComments==undefined||EachOtherComments==undefined
+                ||showPrivateComment==undefined||showNoComments==undefined||defaultNoOfComments==undefined||defaultNoOfComments<0){
                 throw new customError(400,"please give the all options");
             }
-            await this.companyRepository.upateOptionsOfTheCompany(companyId,roleId,{privateComment,NoComments,NoMoreComments,EachOtherComments});
+            await this.companyRepository.upateOptionsOfTheCompany(companyId,roleId,{privateComment,userNoComments,NoMoreComments,EachOtherComments
+                ,showPrivateComment,showNoComments,defaultNoOfComments});
             res.json({status:true,msg:"successfully updated the options"});
         }catch(err){
             next(err);
