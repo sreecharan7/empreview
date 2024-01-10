@@ -252,7 +252,8 @@ function findAndHighlightInDiv(searchTerm) {
 function searchFormSubmission(event){
     event.preventDefault();
     var formData= new FormData(this);
-    var arr=searchGivenInput(formData.get("search"));
+    const searchInput=formData.get("search").trim();
+    var arr=searchGivenInput(searchInput);
     requestsBoxFromCompany.innerHTML='';
     alertToast("Searching...");
     if(arr.length==0){
@@ -262,7 +263,7 @@ function searchFormSubmission(event){
     for(let i of arr){
         requestsBoxFromCompany.innerHTML=requestsBoxFromCompany.innerHTML+requestBoxMaker(i);
     }
-    findAndHighlightInDiv(formData.get("search"));
+    findAndHighlightInDiv(searchInput);
     alertToast("Searched for the keyword");
 }
 function searchGivenInput(data){

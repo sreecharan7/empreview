@@ -8,7 +8,7 @@ const options=new mongoose.Schema({
     NoMoreComments:{type:"Boolean",require:true,default:false},
     showPrivateComment:{type:"Boolean",require:true,default:false},
     showNoComments:{type:"Boolean",require:true,default:false},
-    defaultNoOfComments:{type:"Number",require:true,default:5},
+    defaultNoOfComments:{type:"Number",require:true,default:2},
 })
 
 export const companyschema=new mongoose.Schema({

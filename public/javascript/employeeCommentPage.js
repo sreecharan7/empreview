@@ -114,7 +114,8 @@ function searchFormSubmission(event){
     var formData= new FormData(this);
     commentBox.innerHTML='';
     alertToast("Searching...");
-    var arr=searchGivenInput(formData.get("search"));
+    const searchInput=formData.get("search").trim();
+    var arr=searchGivenInput(searchInput);
     if(arr.length==0){
         commentBox.innerHTML=`<h3 class="text-center" style="width:600px" >There is no request to the keyword</h3>`;
         return;
@@ -122,7 +123,7 @@ function searchFormSubmission(event){
     for(let i of arr){
         commentBox.innerHTML=commentBox.innerHTML+boxMaker(i);
     }
-    findAndHighlightInDiv(formData.get("search"));
+    findAndHighlightInDiv(searchInput);
     alertToast("Searched for the keyword");
 }
 function findAndHighlightInDiv(searchTerm) {

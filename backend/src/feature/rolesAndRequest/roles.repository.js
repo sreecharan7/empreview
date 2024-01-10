@@ -43,6 +43,15 @@ export class rolesRepository{
             throw new customError(400,"something went wrong while searching for user");
         }
     }
+    getRoleById=async (roleId)=>{
+        try{
+            let role=await rolesModel.findOne({_id:roleId});
+            return role;
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while searching for user");
+        }
+    }
     dataOfUserRoles=async (userId)=>{
         try{
             const roles=await rolesModel.find({userId},{userId:0,"__v":0}).sort({ time: -1 });
@@ -308,6 +317,29 @@ export class rolesRepository{
         }catch(err){
             console.log(err);
             throw new customError(400,"something went wrong while getting the details of the employees");
+        }
+    }
+    increseOrDecreseTheRating=async (roleId,rating,method,n=1)=>{
+        try{
+            const role=await rolesModel.findOne({_id:roleId});
+            if(!role){
+                throw new customError(400,"No role found with the given id");
+            }
+            let newRating,noOfRating;
+            if(method=="+"){
+                 noOfRating=role.noOfRating+n;
+                 newRating=(role.rating*(role.noOfRating)+rating)/noOfRating;
+            }
+            else{
+                if(role.noOfRating-n<0){
+                    throw new customError(400,"something went wrong while changing the rating1");
+                }
+                 noOfRating=role.noOfRating-n;
+                 newRating=(role.rating*(role.noOfRating)-rating)/noOfRating;
+            }
+            await rolesModel.updateOne({_id:roleId},{$set:{rating:newRating,noOfRating}});
+        }catch(err){
+            throw new customError(400,"something went wrong while changing the rating");
         }
     }
 }

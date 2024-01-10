@@ -1,11 +1,6 @@
 const inputGroup=document.getElementById("input-group-div").querySelectorAll("input");
 const saveButton=document.getElementById("save-button");
 
-window.addEventListener('load', function() {
-    alertToast("Loading...");
-});
-
-
 function deleteModalSetter(){
     modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Delete the organisation</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
@@ -47,6 +42,7 @@ function deleteConfirm(element){
 }
 
 function getOptions(){
+    alertToast("Loading...");
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/api/company/getOptions", true);
     xhr.onreadystatechange = function () {
