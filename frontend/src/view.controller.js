@@ -166,7 +166,7 @@ export class viewController{
                 }
             // if(data.banner!="lightgrey"){data.banner=`url(${data.banner})`}
 
-            await res.render("employeeHomeView",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/employeeHomeView.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner});
+            await res.render("employeeHomeView",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/employeeHomeView.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner,rating:data.rating,noOfRating:data.noOfRating});
         }catch(err){
             next(err);
         }

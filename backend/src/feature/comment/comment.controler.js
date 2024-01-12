@@ -18,7 +18,7 @@ export class commentController{
         try{
             const {msg,rating,toWhomId}=req.body;
             const {userId,companyId, roleId,role}=req.userData;
-            if(!msg||!rating||!toWhomId||!isValidObjectId(toWhomId)){
+            if(!rating||!toWhomId||!isValidObjectId(toWhomId)){
                 throw new customError(400,"give the proper details");
             }
             const options = await this.companyRepository.getCompanyOptions(companyId);
@@ -37,7 +37,7 @@ export class commentController{
                 const comment=await this.commentRepository.add(rating,msg,roleId,toWhomId,userId);
                 await this.rolesRepository.increseOrDecreseTheRating(toWhomId,rating,"+");
                 if(comment){
-                    res.status(201).json({status:true,message:"comment added successfully"});
+                    res.status(201).json({status:true,msg:"comment added successfully"});
                     return;
                 }
                 else{
@@ -61,7 +61,7 @@ export class commentController{
                 }else{
                     await this.rolesRepository.increseOrDecreseTheRating(toWhomId,rating,"+");
                     await this.commentRepository.add(rating,msg,roleId,toWhomId,userId);
-                    res.status(201).json({status:true,message:"comment added successfully"});
+                    res.status(201).json({status:true,msg:"comment added successfully"});
                 }            
             }
         }
@@ -71,7 +71,7 @@ export class commentController{
     }
     viewComment=async(req,res,next)=>{
         try{
-            let toWhomId=req.body["toWhomId"];
+            let toWhomId=req.query["toWhomId"];
             let {companyId,roleId,role}=req.userData;
             const options = await this.companyRepository.getCompanyOptions(companyId);
             if(!toWhomId){

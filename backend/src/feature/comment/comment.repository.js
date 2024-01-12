@@ -31,7 +31,7 @@ export class commentRepository{
     }
     privateCommentsWithoutNames=async(toWhomId)=>{
         try{
-            const comments=await commentModel.find({toWhomId},"rating msg -_id");
+            const comments=await commentModel.find({toWhomId},"rating msg -_id").sort({ time: -1 });
             const newComments =comments.map(comment=>{
                 return {...comment.toObject(),name:"private comments"};
             })
@@ -48,6 +48,7 @@ export class commentRepository{
                         toWhomId:new ObjectId(toWhomId)
                     }
                 },
+                { $sort: { time: -1 } },
                 {
                     "$lookup":{
                         "from":"users",
@@ -75,7 +76,7 @@ export class commentRepository{
     }
     showSamebyWhomIdandtoWhomId=async(byWhomId,toWhomId)=>{
         try{
-            let comments=await commentModel.find({byWhomId,toWhomId},"rating msg -_id");
+            let comments=await commentModel.find({byWhomId,toWhomId},"rating msg -_id").sort({ time: -1 });
             const newComments =comments.map(comment=>{
                 return {...comment.toObject(),name:"By You"};
             })

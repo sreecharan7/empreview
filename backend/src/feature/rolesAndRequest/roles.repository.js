@@ -180,6 +180,8 @@ export class rolesRepository{
                             "companyId":"$companyId",
                             "companyName":"$companyName",
                             "role":"$role",
+                            "rating":"$rating",
+                            "noOfRating":"$noOfRating",
                         }
                     }
             ]);
@@ -321,21 +323,21 @@ export class rolesRepository{
     }
     increseOrDecreseTheRating=async (roleId,rating,method,n=1)=>{
         try{
-            const role=await rolesModel.findOne({_id:roleId});
+            let role=await rolesModel.findOne({_id:roleId});
             if(!role){
                 throw new customError(400,"No role found with the given id");
             }
             let newRating,noOfRating;
             if(method=="+"){
-                 noOfRating=role.noOfRating+n;
-                 newRating=(role.rating*(role.noOfRating)+rating)/noOfRating;
+                noOfRating=role.noOfRating+n;
+                newRating=(Number(role.rating*role.noOfRating)+Number(rating))/noOfRating;
             }
             else{
                 if(role.noOfRating-n<0){
                     throw new customError(400,"something went wrong while changing the rating1");
                 }
                  noOfRating=role.noOfRating-n;
-                 newRating=(role.rating*(role.noOfRating)-rating)/noOfRating;
+                 newRating=(Number(role.rating*role.noOfRating)-Number(rating))/noOfRating;
             }
             await rolesModel.updateOne({_id:roleId},{$set:{rating:newRating,noOfRating}});
         }catch(err){

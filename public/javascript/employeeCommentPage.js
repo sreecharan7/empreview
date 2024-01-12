@@ -7,7 +7,7 @@ const bannerBlock=commentPersonView.querySelector("#banner-block");
 const commentPersonViewName=commentPersonView.querySelector('#comment-person-view-name');
 const commentPersonViewAbout=commentPersonView.querySelector('#comment-person-view-about');
 const commentPersonViewRatingBar=commentPersonView.querySelector('#comment-person-view-rating-bar');
-
+const commetBoxContainer=document.getElementById('commet-box-container');
 
 let dataComments=null;
 let currentBox=null;
@@ -27,7 +27,7 @@ var truncateStyles = {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    maxWidth: '180px',
+    maxWidth: '230px',
     cursor: 'pointer'
   };
 
@@ -68,7 +68,7 @@ function boxMaker(i){
                                     <div class="rounded" style="width: 125px;height: 5px; background-color: white; margin-top: 8px;">
                                         <div style="width: ${i.rating*20}%;height: 5px; background-color: yellow;"></div>
                                     </div>
-                                    <div style="margin-top: -2px;"> &nbsp;&nbsp;(${i.rating}/5)(${i.noOfRating})</div>
+                                    <div style="margin-top: -2px;"> &nbsp;&nbsp;(${Math.round(i.rating*10)/10}/5)(${i.noOfRating})</div>
                                 </div>
                             </div>
                         </div>
@@ -184,15 +184,16 @@ function changeToEmployee(id){
         bannerBlock.children[0].classList.add('d-none');
     }
     commentPersonViewRatingBar.children[0].children[0].style.width=d.rating*20+"%";
-    commentPersonViewRatingBar.children[1].children[0].innerHTML=d.rating;
+    commentPersonViewRatingBar.children[1].children[0].innerHTML=Math.round(d.rating*10)/10;
     commentPersonViewRatingBar.children[1].children[1].innerHTML=d.noOfRating;
+    commentFencth();
 }
 
 
 function commentModalMaker(){
     modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Comment box</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
-    modalBody.innerHTML=`<div id="model-message-shower"></div><div class="row g-3">
+    modalBody.innerHTML=`<form id="comment-form"><div id="model-message-shower"></div><div class="row g-3">
         <div class="col-auto d-flex">
             <label for="rating">Rating :- </label>
             <div id="rating" class="mx-2" style="margin-top:-15px">
@@ -212,7 +213,7 @@ function commentModalMaker(){
         </div>
         <div class="col-auto input-group">
                 <label for="organisationName">Comment :- </label>
-                <textarea class="form-control" placeholder="comment msg to the person (optional)" name="about" id="aboutOrganisation" required></textarea>
+                <textarea class="form-control" placeholder="comment msg to the person (optional)"  id="aboutOrganisation" required name="msg"></textarea>
                 <div class="invalid-tooltip">
                     please provide about section
                 </div>
@@ -220,9 +221,100 @@ function commentModalMaker(){
             <div>
             <a href="#" onclick="alert('**You should choose the number of stars and the comment msessage(optional) and press the submit button that will submit the your comment to that person**')">Know more!</a>
             </div>
-    </div>`;
+    </div></form>`;
     modalFooter.innerHTML=`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary" id="create-organisation-submit" onClick="createSubmit(this)">Submit</button>`;
+    <button type="button" class="btn btn-primary" id="create-organisation-submit" onClick="commentSubmission(this)">Submit</button>`;
     var modal = new bootstrap.Modal(modalTotal);
     modal.show();
+}
+
+function commentSubmission(element){
+    const comentForm=document.getElementById('comment-form');
+    const messageShower=document.getElementById("model-message-shower");
+    var formData= new FormData(comentForm);
+    //checking for checkbox is checked or not
+    if(!formData.get('rating')){
+        alertToast("Please give the rating");
+        messageShower.innerHTML='<div class="alert alert-danger" role="alert">Please give the rating</div>';
+        return;
+    }
+    //verifying the data
+    //clearing error box
+    formData.append('toWhomId',currentBox);
+    messageShower.innerHTML='';
+    //disabling the button
+    element.disabled=true;
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/comment/add", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    var serializedData = new URLSearchParams(formData).toString();
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            let response = JSON.parse(xhr.responseText);
+            if(xhr.status==201){
+                var box=`<div class="alert alert-success" role="alert">${response["msg"]}.</div>`
+                messageShower.innerHTML=box;
+            }
+            else{
+                var box=`<div class="alert alert-danger" role="alert">${response["msg"]}</div>`
+                messageShower.innerHTML=box;
+                submitButton.disabled =false;
+            }
+        }
+    };
+
+    xhr.send(serializedData);
+}
+
+function commentFencth(){
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", `/api/comment/viewComments?toWhomId=${currentBox}`, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            let response = JSON.parse(xhr.responseText);
+            if(xhr.status==200){
+                // console.log(response);
+                CommentsBoxAdder(response["data"]);
+            }
+            else{
+                alertToast(`${response["msg"]}`);
+            }
+        }
+    };
+
+    xhr.send();
+}
+
+function CommentsBoxAdder(data){
+    if(data.length==0){
+        commetBoxContainer.innerHTML=`<h5 class="text-center" style="width:600px" >There is no comment to show</h5>`;
+        return;
+    }
+    commetBoxContainer.innerHTML='';
+    for(let i of data){commetBoxContainer.innerHTML+=commetBoxMaker(i)};
+}
+
+function commetBoxMaker(i){
+    var box=`
+    <div style="color:  gray;" >
+      <div class="glass p-3 m-3 rounded" style="width: 250px;">
+        <h5  onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; cursor: pointer;">Name:-${i.name}</h5>
+    
+        <div class="d-flex justify-content-center">
+            <h6>rating:&nbsp; </h6>
+            <div class="rounded" style="width: 1000px;height: 5px; background-color: white; margin-top: 8px;">
+                <div style="width: ${i.rating*20}%;height: 5px; background-color: yellow;"></div>
+            </div>
+            <div style="margin-top: -2px;"> &nbsp;&nbsp;(${i.rating}/5)</div>
+        </div>
+    
+        <h6  onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; cursor: pointer;">comment:- ${i.msg}</h6>
+      </div>
+    </div>`;
+    return box;
 }
