@@ -35,6 +35,7 @@ app.get("/v/a/about",authorization,(req,res,next)=>{viewC.adminViewAbout(req,res
 
 app.get("/v/a/add",authorization,(req,res,next)=>{viewC.addEmployee(req,res,next)});
 app.get("/v/a/employee",authorization,(req,res,next)=>{viewC.organisationEmployeePage(req,res,next)});
+app.get("/v/a/employee/:roleId",authorization,(req,res,next)=>{viewC.adminEmployeeEditHome(req,res,next)});
 app.get("/v/a/settings",authorization,(req,res,next)=>{viewC.adminViewSettings(req,res,next);});
 
 app.get("/v/r",authorization,(req,res,next)=>{viewC.requestToUserPage(req,res,next);})

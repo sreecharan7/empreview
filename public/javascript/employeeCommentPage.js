@@ -258,6 +258,7 @@ function commentSubmission(element){
             if(xhr.status==201){
                 var box=`<div class="alert alert-success" role="alert">${response["msg"]}.</div>`
                 messageShower.innerHTML=box;
+                commentFencth();
             }
             else{
                 var box=`<div class="alert alert-danger" role="alert">${response["msg"]}</div>`

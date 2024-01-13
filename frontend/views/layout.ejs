@@ -128,26 +128,6 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
 
   async function signUpCheckUsingRequestToServer(){
 
-    // var xhr = new XMLHttpRequest();
-    // xhr.open("GET", "/api/user/authorization-check", true);
-    // xhr.onreadystatechange = function () {
-    //     if (xhr.readyState == 4) {
-    //         let response = JSON.parse(xhr.responseText);
-    //         if(xhr.status==200){
-    //           siginDiv.children[0].classList.add("d-none");
-    //           siginDiv.children[1].classList.remove("d-none");
-    //           return true;
-    //         }
-    //         else if(xhr.status==400){
-    //           return false;
-    //         }
-    //         else{
-    //           alert(response.msg);
-    //           return false;
-    //         }
-    //     }
-    // };
-    // xhr.send();
       var cookies = document.cookie.split('; ');
 
       for (var i = 0; i < cookies.length; i++) {

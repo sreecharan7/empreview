@@ -31,7 +31,7 @@ var truncateStyles = {
 
   function requestBoxMaker(i){
     var box=`<div class="col" id="${i._id}" style="height:150px">
-                    <a style="text-decoration: none;" href="./employee/${i._id}">
+                    <a style="text-decoration: none;" href="/v/a/employee/${i._id}">
                     <div class="card mb-3 custom-card glass" style="max-width: 540px;">
                         <div class="row g-0">
                         <div class="col-4 ">

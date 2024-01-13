@@ -86,4 +86,21 @@ export class commentRepository{
             throw new customError(400,"something went wrong while getting the comments");
         }
     }
+    deleteComment=async(id)=>{
+        try{
+            const comment=await commentModel.findByIdAndDelete(id);
+            return comment;
+        }catch(err){
+            throw new customError(400,"something went wrong while deleting the comment");
+        }
+    }
+    updateCommet=async(id,rating,msg)=>{
+        try{
+            const comment=await commentModel.findByIdAndUpdate({_id:id},{rating,msg});
+            return comment;
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while updating the comment");
+        }
+    }    
 }

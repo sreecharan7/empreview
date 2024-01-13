@@ -193,4 +193,27 @@ export class viewController{
             next(err);
         }
     }
+    adminEmployeeEditHome=async(req,res,next)=>{
+        try{
+            if(!(req.userData["companyId"]&&(req.userData["role"]=="admin"||req.userData["role"]=="both"))){
+                await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            const {roleId}=req.params;
+            if(!roleId){
+                res.redirect("/404");
+                return;
+            };
+            let data=await this.requestToBackend.getTheDataOfEmployee(roleId);
+            if(data.length==0||data[0].companyId!=req.userData["companyId"]){
+                res.redirect("/404");
+                return;
+            }
+            data=data[0];
+            await res.render("adminEmployeeEditHome",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/adminEmployeeEditHome.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner,rating:data.rating,noOfRating:data.noOfRating});
+
+        }catch(err){
+            next(err);
+        }
+    }
 }

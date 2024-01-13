@@ -119,7 +119,74 @@ export class commentController{
 
         }
         catch(err){
-            console.log(err);
+            next(err);
+        }
+    }
+    updateComnment=async(req,res,next)=>{
+        try{
+            const {msg,rating,toWhomId,_id}=req.body;
+            const {companyId,role}=req.userData;
+            if(!rating||!toWhomId||!isValidObjectId(toWhomId)){
+                throw new customError(400,"give the proper details");
+            }
+
+            const toWhomRole=await this.rolesRepository.getRoleById(toWhomId);
+            if(!toWhomRole){
+                throw new customError(400,"No role found with the given id");
+            }
+            if(toWhomRole.companyId!=companyId){
+                throw new customError(400,"No role found with the given id");
+            }
+            // console.log(toWhomRole);
+            if(role!="admin"&&role!="both"){
+                throw new customError(400,"you are not allowed to update the comment");
+            }
+            const comment=await this.commentRepository.updateCommet(_id,rating,msg);
+            console.log(comment);
+            if(comment){
+                await this.rolesRepository.increseOrDecreseTheRating(comment.toWhomId,rating,"-+",1,comment.rating);
+                res.status(200).json({status:true,msg:"comment updated successfully"});
+                return;
+            }
+            else{
+                throw new customError(400,"something went wrong while updating the comment");
+            }
+            
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    deleteComment=async(req,res,next)=>{
+        try{
+            const {toWhomId,_id}=req.body;
+            const {companyId,role}=req.userData;
+            if(!toWhomId||!isValidObjectId(toWhomId)){
+                throw new customError(400,"give the proper details");
+            }
+
+            const toWhomRole=await this.rolesRepository.getRoleById(toWhomId);
+            if(!toWhomRole){
+                throw new customError(400,"No role found with the given id");
+            }
+            if(toWhomRole.companyId!=companyId){
+                throw new customError(400,"No role found with the given id");
+            }
+            if(role!="admin"&&role!="both"){
+                throw new customError(400,"you are not allowed to delete the comment");
+            }
+            const comment=await this.commentRepository.deleteComment(_id);
+            if(comment){
+                await this.rolesRepository.increseOrDecreseTheRating(comment.toWhomId,comment.rating,"-");
+                res.status(200).json({status:true,msg:"comment deleted successfully"});
+                return;
+            }
+            else{
+                throw new customError(400,"something went wrong while deleting the comment");
+            }
+            
+        }
+        catch(err){
             next(err);
         }
     }
