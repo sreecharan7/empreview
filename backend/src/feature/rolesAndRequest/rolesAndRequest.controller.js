@@ -2,12 +2,22 @@ import { customError } from "../../middlewares/error.middleware.js";
 import { requestRepository } from "./request.repository.js";
 import { rolesRepository } from "./roles.repository.js";
 import { companyRepository } from "../company/company.repository.js";
+import { commentRepository } from "../comment/comment.repository.js";
+
 import jwt from "jsonwebtoken";
+
+const isValidObjectId = (id) => {
+    const objectIdPattern = /^[0-9a-fA-F]{24}$/;  
+    return objectIdPattern.test(id);
+};
+
+
 export class rolesAndRequestController{
     constructor(){
         this.requestRepository=new requestRepository();
         this.rolesRepository=new rolesRepository();
         this.companyRepository=new companyRepository();
+        this.commentRepository=new commentRepository();
     }
     addNewRole=async (req,res,next)=>{
         try{
@@ -173,6 +183,55 @@ export class rolesAndRequestController{
                 data=await this.rolesRepository.getDetaisOfEmployeesOfCommenters(roleId);
             }
             res.json({status:true,data:data});
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    changeRole=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            const roleId=req.userData.roleId;
+            const newRole=req.body["role"];
+            const roledIDC=req.body["roleId"];
+            //should handle when the admin is removed when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")&&!(newRole=="employee"||newRole=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            if(!newRole||!roledIDC){
+                throw new customError(400,"please provide the newRole and newRoleId");
+            }
+            const roleC=await this.rolesRepository.changeRole(roledIDC,newRole,companyId);
+            if(roleC){
+                res.json({status:true,msg:"sucessfuly changed role"});
+            }else{
+                throw new customError(400,"please check the newRoleId or login details");
+            }
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    deleteRole=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            const roledIDC=req.body["roleId"];
+            //should handle when the admin is removed when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            if(!roledIDC||!isValidObjectId(roledIDC)){
+                throw new customError(400,"please provide the RoleId");
+            }
+            const roleC=await this.rolesRepository.deleteRole(roledIDC,companyId);
+            if(roleC){
+                await this.commentRepository.deleteAllCommentsOfUser(roledIDC);
+                res.json({status:true,msg:"sucessfuly deleted role"});
+            }else{
+                throw new customError(400,"please check the newRoleId or login details");
+            }
         }
         catch(err){
             next(err);

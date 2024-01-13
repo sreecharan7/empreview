@@ -120,7 +120,7 @@ function editCommentModelMaker(i){
         <label for="msg" class="input-group-text">Comment</label>
         <textarea class="form-control" id="msg" rows="3">${i.msg}</textarea>
     </div>
-    <form>
+    </form>
     <div class="d-flex ">
         <button type="button" class="btn btn-outline-danger" onClick="deleteComment(this,'${i._id}')">Delete comment</button>
     </div>
@@ -177,6 +177,95 @@ function updateComment(element,id){
                 modelMsgShower.innerHTML=`<div class="alert alert-success" role="alert"> ${response["msg"]} </div>`;
                 alertToast(`${response["msg"]}`);
                 commentFencth();
+            }
+            else{
+                modelMsgShower.innerHTML=`<div class="alert alert-danger" role="alert"> ${response["msg"]} </div>`;
+                alertToast(`${response["msg"]}`);
+            }
+        }
+    };
+    xhr.send(serializedData);
+}
+
+function changeRole(role,element){
+    const data={
+        roleId:toWhomId,
+        role:role
+    };
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", `/api/rolesAndRequest/changeRole`, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    var serializedData = new URLSearchParams(data).toString();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            let response = JSON.parse(xhr.responseText);
+            if(xhr.status==200){
+                if(role=="both"){
+                    role="admin";
+                    element.innerHTML="Demotivate to employee";
+                    element.classList.remove("btn-outline-success");
+                    element.classList.add("btn-outline-danger");
+                    element.setAttribute("onClick",`changeRole('employee',this)`);
+                }else{
+                    element.innerHTML="Promote to admin";
+                    element.classList.remove("btn-outline-danger");
+                    element.classList.add("btn-outline-success");
+                    element.setAttribute("onClick",`changeRole('both',this)`);
+                }
+                alertToast(`${response["msg"]} to ${role}`);
+            }
+            else{
+                alertToast(`${response["msg"]}`);
+            }
+        }
+    };
+    xhr.send(serializedData);
+}
+
+function deleteEmployeeModelMaker(){
+    modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Delete the employee</h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
+    modalBody.innerHTML=`<div id="model-message-shower">
+    <div id="model-msg-shower"></div>
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Warning!</h4>
+        <p>This action is irreversible</p>
+        <hr>
+        <p class="mb-0">If you delete this employee, all the data of this employee will be deleted</p>
+    </div>
+    <div class="d-flex justify-content-center">
+        <h5>Are you sure you want to delete this employee?</h5>
+    </div>
+    </div>`;
+    modalFooter.innerHTML=`
+    <button type="button" class="btn btn-danger" onclick="deleteEmployee(this)" >Delete</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    `;
+    var modal = new bootstrap.Modal(modalTotal);
+    modal.show();
+
+}
+
+
+function deleteEmployee(element){
+    element.disabled=true;
+    const data={
+        roleId:toWhomId
+    };
+    const modelMsgShower=document.getElementById("model-msg-shower");
+    const xhr = new XMLHttpRequest();
+    xhr.open("DELETE", `/api/rolesAndRequest/deleteRole`, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    var serializedData = new URLSearchParams(data).toString();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            let response = JSON.parse(xhr.responseText);
+            if(xhr.status==200){
+                alertToast(`${response["msg"]}`);
+                modelMsgShower.innerHTML=`<div class="alert alert-success" role="alert"> ${response["msg"]} redirecting to the admin employes page</div>`;
+                setTimeout(() => {
+                    window.location.href="/v/a/employee";
+                }, 2000);
             }
             else{
                 modelMsgShower.innerHTML=`<div class="alert alert-danger" role="alert"> ${response["msg"]} </div>`;

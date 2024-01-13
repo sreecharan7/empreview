@@ -102,5 +102,13 @@ export class commentRepository{
         catch(err){
             throw new customError(400,"something went wrong while updating the comment");
         }
-    }    
+    }
+    deleteAllCommentsOfUser=async(id)=>{
+        try{
+            const comment=await commentModel.deleteMany({toWhomId:id});
+            return comment;
+        }catch(err){
+            throw new customError(400,"something went wrong while deleting the comment");
+        }
+    }
 }

@@ -210,7 +210,7 @@ export class viewController{
                 return;
             }
             data=data[0];
-            await res.render("adminEmployeeEditHome",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/adminEmployeeEditHome.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner,rating:data.rating,noOfRating:data.noOfRating});
+            await res.render("adminEmployeeEditHome",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/adminEmployeeEditHome.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner,rating:data.rating,noOfRating:data.noOfRating,isAdmin:(data.role=="admin"||data.role=="both")?true:false});
 
         }catch(err){
             next(err);

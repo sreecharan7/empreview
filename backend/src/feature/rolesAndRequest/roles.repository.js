@@ -208,6 +208,15 @@ export class rolesRepository{
             throw new customError(400,"something went wrong while changing the role");
         }
     }
+    changeRole=async (roleId,change,companyId)=>{
+        try{
+            const role=rolesModel.findOneAndUpdate({_id:roleId,companyId:companyId},{$set:{role:change}});
+            return role;
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while changing the role");
+        }
+    }
     deleteRoleByCompanyId=async (companyId)=>{
         try{
             await rolesModel.deleteMany({companyId});
@@ -345,7 +354,6 @@ export class rolesRepository{
             }
             else if(method=="-+"){
                 noOfRating=role.noOfRating;
-                console.log(noOfRating,role.rating,rating,extra);
                 newRating=(Number(role.rating*role.noOfRating)+Number(rating)-Number(extra))/noOfRating;
             }
             await rolesModel.updateOne({_id:roleId},{$set:{rating:newRating,noOfRating}});
@@ -354,10 +362,22 @@ export class rolesRepository{
             throw new customError(400,"something went wrong while changing the rating");
         }
     }
+    deleteRole=async (roleId,companyId)=>{
+        try{
+            const role=await rolesModel.findOneAndDelete({_id:roleId,companyId:companyId});
+            await decreaseCount(companyId);
+            return role;
+        }catch(err){
+            throw new customError(400,"something went wrong while deleting the role");
+        }
+    }
 }
 
 import {companyRepository} from "../company/company.repository.js"
 const companyR=new companyRepository();
 async function increaseCount(companyId){
     return await companyR.addOrRemoveEmployee(companyId,1,"+")
+}
+async function decreaseCount(companyId){
+    return await companyR.addOrRemoveEmployee(companyId,1,"-")
 }

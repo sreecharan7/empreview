@@ -13,8 +13,9 @@ app.get("/requestsSent",authorization,(req,res,next)=>{rolesAndRequestC.dataOfRe
 app.post("/requestToRole",authorization,(req,res,next)=>{rolesAndRequestC.changeRequestToRole(req,res,next);});
 app.put("/changeRoleToAdmin",authorization,(req,res,next)=>{rolesAndRequestC.changeAdminToEmployee(req,res,next);});  
 app.delete("/revertRequest",authorization,(req,res,next)=>{rolesAndRequestC.revertRequest(req,res,next);});
+app.put("/changeRole",authorization,(req,res,next)=>{rolesAndRequestC.changeRole(req,res,next);});
+app.delete("/deleteRole",authorization,(req,res,next)=>{rolesAndRequestC.deleteRole(req,res,next);});
 
 app.get("/dataEmployees",authorization,(req,res,next)=>{rolesAndRequestC.dataOfEmployees(req,res,next)});
-
 app.get("/dataCommetsEmployee",authorization,(req,res,next)=>{rolesAndRequestC.getAllowedCommentUserDetails(req,res,next)});
 export default app;

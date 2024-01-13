@@ -5,7 +5,12 @@ function deleteModalSetter(){
     modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Delete the organisation</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
     modalBody.innerHTML=`<div id="model-message-shower">
-    <div class="alert alert-danger" role="alert">Once you delete the organisation you cannot recover it back.All the data related to the organisation will be deleted</div>
+    
+    <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Warning!</h4>
+    <p>This action is irreversible</p>
+    <hr>
+    Once you delete the organisation you cannot recover it back.All the data related to the organisation will be deleted</div>
     <h5>Are you sure you want to delete the organisation?</h5>
     </div>`;
     modalFooter.innerHTML=`<button type="button" class="btn btn-danger" id="delete-organisation-confirm-button" onClick="deleteConfirm(this)">delete</button><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
