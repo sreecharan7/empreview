@@ -1,4 +1,4 @@
-const requestsBoxFromCompany=document.getElementById("requests-box-from-company");
+const employeeBox=document.getElementById("requests-box-from-company");
 const searchForm=document.getElementById("search-form");
 const searchBoxInput=searchForm.querySelector("input");
 const backButton=document.getElementById("back-button");
@@ -143,16 +143,16 @@ var truncateStyles = {
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==200){
                 requests=response.request;
-                requestsBoxFromCompany.innerHTML='';
+                employeeBox.innerHTML='';
                 if(response.request.length==0){
-                    requestsBoxFromCompany.innerHTML=`<h3 class="text-center" style="width:600px" >There is no request to the organisation</h3>`;
+                    employeeBox.innerHTML=`<h3 class="text-center" style="width:600px" >There is no request to the organisation</h3>`;
                     return;
                 }
                 for(let i of response.request){
                     if(!i.note){
                         i.note="No note kept";
                     }
-                requestsBoxFromCompany.innerHTML=requestsBoxFromCompany.innerHTML+requestBoxMaker(i);
+                employeeBox.innerHTML=employeeBox.innerHTML+requestBoxMaker(i);
                 }
             }
             else{
@@ -194,7 +194,7 @@ function removeFromArray(id){
     }
     setInterval(()=>{
         if(requests.length==0){
-            requestsBoxFromCompany.innerHTML=`<h3 class="text-center" style="width:600px" >There is no request to the organisation</h3>`;
+            employeeBox.innerHTML=`<h3 class="text-center" style="width:600px" >There is no request to the organisation</h3>`;
             return;
         }
     },1200);
@@ -224,7 +224,7 @@ function approve(requestId){
 
 
 function findAndHighlightInDiv(searchTerm) {
-    if (requestsBoxFromCompany && window.find && window.getSelection) {
+    if (employeeBox && window.find && window.getSelection) {
 
         var removeHighlights = document.querySelectorAll('.highlight');
         removeHighlights.forEach(function (highlight) {
@@ -233,7 +233,7 @@ function findAndHighlightInDiv(searchTerm) {
 
         document.designMode = "on";
         var sel = window.getSelection();
-        sel.collapse(requestsBoxFromCompany, 0);
+        sel.collapse(employeeBox, 0);
 
         while (window.find(searchTerm)) {
             document.execCommand("HiliteColor", false, "yellow");
@@ -254,14 +254,14 @@ function searchFormSubmission(event){
     var formData= new FormData(this);
     const searchInput=formData.get("search").trim();
     var arr=searchGivenInput(searchInput);
-    requestsBoxFromCompany.innerHTML='';
+    employeeBox.innerHTML='';
     alertToast("Searching...");
     if(arr.length==0){
-        requestsBoxFromCompany.innerHTML=`<h3 class="text-center" style="width:600px" >There is no request to the keyword</h3>`;
+        employeeBox.innerHTML=`<h3 class="text-center" style="width:600px" >There is no request to the keyword</h3>`;
         return;
     }
     for(let i of arr){
-        requestsBoxFromCompany.innerHTML=requestsBoxFromCompany.innerHTML+requestBoxMaker(i);
+        employeeBox.innerHTML=employeeBox.innerHTML+requestBoxMaker(i);
     }
     findAndHighlightInDiv(searchInput);
     alertToast("Searched for the keyword");

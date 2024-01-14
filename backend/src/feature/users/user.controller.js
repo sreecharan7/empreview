@@ -1,5 +1,8 @@
 import { customError } from "../../middlewares/error.middleware.js";
 import { userRepository } from "./user.repository.js";
+import {companyRepository} from  "../company/company.repository.js"
+import {rolesRepository} from "../rolesAndRequest/roles.repository.js"
+import {requestRepository} from "../rolesAndRequest/request.repository.js"
 import bycrpt from "bcrypt"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
@@ -9,6 +12,9 @@ dotenv.config();
 export class userController {
     constructor(){
         this.userRepository=new userRepository();
+        this.companyRepository=new companyRepository();
+        this.rolesRepository=new rolesRepository();
+        this.requestRepository=new requestRepository();
     }
     addNewUser=async (req,res,next)=>{
         try{
@@ -73,4 +79,72 @@ export class userController {
             next(err);
         }
     }
+    updateUserDetails=async (req,res,next)=>{
+        try{
+            const {userId}=req.userData;
+            let {name,about}=req.body;
+            name=name.trim();
+            about=about.trim();
+            if(await this.userRepository.updateUserDetails(userId,name,about)){
+                res.json({status:true,msg:"user details updated sucessfully"});
+            }
+            else{
+                throw new customError(400,"something went wrong while updating the user details");
+            }
+        }catch(err){
+            next(err);
+        }
+    }
+    updatePhotoAndBanner=async (req,res,next)=>{
+        try{
+            const {userId}=req.userData;
+            let {photo,banner}=req.files;
+            let photoPath,bannerpath,photoOriginalName,bannerOriginalName;
+            if(photo){
+                photoPath="\\"+photo[0].path.replace(/^public\\/, '');
+                photoOriginalName=photo[0].originalname;
+                if(await this.userRepository.updateUserPhoto(userId,photoPath,photoOriginalName,"photo")){
+                    res.json({status:true,msg:"user photo updated sucessfully"});
+                    return;
+                }
+                else{
+                    throw new customError(400,"something went wrong while updating the user photo");
+                }
+            }
+            if(banner){
+                bannerpath="\\"+banner[0].path.replace(/^public\\/, '');
+                bannerOriginalName=banner[0].originalname;
+                if(await this.userRepository.updateUserPhoto(userId,bannerpath,bannerOriginalName,"banner")){
+                    res.json({status:true,msg:"user banner updated sucessfully"});
+                    return;
+                }
+                else{
+                    throw new customError(400,"something went wrong while updating the user banner");
+                }
+            }
+            else{
+                throw new customError(400,"something went wrong while updating the user photo and banner");
+            }
+        }catch(err){
+            next(err);
+        }
+    }
+    deleteUser=async (req,res,next)=>{
+        try{
+            const {userId}=req.userData;
+            if(await this.userRepository.deleteUser(userId)){
+                await this.companyRepository.deleteUserFromAllCompany(userId);
+                await this.rolesRepository.deleteRoleByUserId(userId);
+                await this.requestRepository.deleteRequestByUserId(userId);
+                res.cookie(process.env.cookieNameUserCredientails,'',{expires:new Date(0)});
+                res.json({status:true,msg:"user deleted sucessfully"});
+            }
+            else{
+                throw new customError(400,"something went wrong while deleting the user");
+            }
+        }catch(err){
+            next(err);
+        }
+    }
+
 }

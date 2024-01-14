@@ -54,7 +54,36 @@ export class rolesRepository{
     }
     dataOfUserRoles=async (userId)=>{
         try{
-            const roles=await rolesModel.find({userId},{userId:0,"__v":0}).sort({ time: -1 });
+            // const roles=await rolesModel.find({userId},{userId:0,"__v":0}).sort({ time: -1 });
+            const roles=await rolesModel.aggregate([
+                {
+                    "$match":{userId:new ObjectId(userId)}
+                },
+                {
+                    "$sort":{ time: -1 }
+                },
+                {
+                    "$lookup": {
+                        from: 'companies',
+                        localField: 'companyId',
+                        foreignField: '_id',
+                        as: 'Data',
+                    }
+                },
+                {
+                    "$unwind":"$Data"
+                },
+                {
+                    "$project":{
+                        "_id":"$_id",
+                        "companyName":"$Data.companyName",
+                        "companyPhoto":"$Data.photoPath",
+                        "companyAbout":"$Data.about",
+                        "role":"$role",
+                        "time":"$time",
+                    }
+                },
+            ]);
             return roles;
         }
         catch(err){
@@ -182,6 +211,7 @@ export class rolesRepository{
                             "role":"$role",
                             "rating":"$rating",
                             "noOfRating":"$noOfRating",
+                            "noOfCommentsAllowed":"$noOfCommentsAllowed",
                         }
                     }
             ]);
@@ -268,7 +298,7 @@ export class rolesRepository{
                         "companyId":"$details.companyId",
                         "roleId":"$details._id",
                         "rating":"$details.rating",
-                        "noOfrating":"$details.noOfRating",
+                        "noOfRating":"$details.noOfRating",
                     }
                 }
             ]);
@@ -368,6 +398,51 @@ export class rolesRepository{
             await decreaseCount(companyId);
             return role;
         }catch(err){
+            throw new customError(400,"something went wrong while deleting the role");
+        }
+    }
+    DataOfEmployeeOfpermissionGivenOne=async (reqRoleId)=>{
+        try{
+            const data=await rolesModel.findById(reqRoleId,{"allowedtoComment":1,"_id":0});
+            return data;
+        }
+        catch(err){
+            console.log(err);
+            throw new customError(400,"something went wrong while computing the roles")
+        }
+    }
+    addEmployeeChangePermission=async (roleId,companyId,employeeId)=>{
+        try{
+            const role=await rolesModel.findOneAndUpdate({_id:roleId,companyId:companyId},{$addToSet:{allowedtoComment:employeeId}});
+            return role;
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while computing the roles")
+        }
+    }
+    removeEmployeeChangePermission=async (roleId,companyId,employeeId)=>{
+        try{
+            const role=await rolesModel.findOneAndUpdate({_id:roleId,companyId:companyId},{$pull:{allowedtoComment:employeeId}});
+            return role;
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while computing the roles")
+        }
+    }
+    noOfCommentsAllowedChangeByAdmin=async (roleId,companyId,noOfCommentsAllowed)=>{
+        try{
+            const role=await rolesModel.findOneAndUpdate({_id:roleId,companyId:companyId},{$set:{noOfCommentsAllowed}});
+            return role;
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while computing the roles")
+        }
+    }
+    deleteRoleByUserId=async (userId)=>{
+        try{
+            await rolesModel.deleteMany({userId});
+        }
+        catch(err){
             throw new customError(400,"something went wrong while deleting the role");
         }
     }

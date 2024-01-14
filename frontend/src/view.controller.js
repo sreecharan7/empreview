@@ -1,3 +1,4 @@
+import e from "express";
 import { requestToBackend } from "../middlewares/requsetToBackend.repository.js";
 import jwt from "jsonwebtoken";
 
@@ -210,9 +211,38 @@ export class viewController{
                 return;
             }
             data=data[0];
-            await res.render("adminEmployeeEditHome",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/adminEmployeeEditHome.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner,rating:data.rating,noOfRating:data.noOfRating,isAdmin:(data.role=="admin"||data.role=="both")?true:false});
+            await res.render("adminEmployeeEditHome",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/adminEmployeeEditHome.js"></script>`,name:data.name,about:data.about,photo:data.photo,banner:data.banner,rating:data.rating,noOfRating:data.noOfRating,isAdmin:(data.role=="admin"||data.role=="both")?true:false,noOfCommentsAllowed:data.noOfCommentsAllowed});
 
         }catch(err){
+            next(err);
+        }
+    }
+    addEmployeeToCommet=async(req,res,next)=>{
+        try{
+            if(!(req.userData["companyId"]&&(req.userData["role"]=="admin"||req.userData["role"]=="both"))){
+                await res.render("customMessageShower",{title:"invalid data",javascript:null,heading:"Please check the URL",sideHeading:"Something went wrong go to home page",button:"home",link:"/"});
+                return;
+            }
+            const {roleId}=req.params;
+            if(!roleId){
+                res.redirect("/404");
+                return;
+            };
+            await res.render("adminEmployeePermission",{title:"employee view",javascript:`<script type="text/javascript" src="/javascript/adminEmployeePermission.js"></script>`});
+
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    myAccountProfile=async(req,res,next)=>{
+        try{
+            const {userId}=req.userData;
+            const user=await this.requestToBackend.getTheDataOfUser(userId);
+            if(user.bannerPath=="default"){user.bannerPath="/website/default-Banner.png"}
+            await res.render("myAccountProfile",{title:"my account",javascript:`<script type="text/javascript" src="/javascript/myAccountProfile.js"></script>`,name:user.name,about:user.about,photo:user.photoPath,email:user.email,banner:user.bannerPath});
+        }
+        catch(err){
             next(err);
         }
     }

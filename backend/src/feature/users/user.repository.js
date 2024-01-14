@@ -120,4 +120,72 @@ export class userRepository{
             }
         }
     }
+    getDataUsingId=async (userId)=>{
+        try{
+            const user=await userModel.findById(userId);
+            if(!user){
+                throw new customError(400,"given the wrong credentials");
+            }
+            return user;
+        }
+        catch(err){
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while picking up the user");
+            }
+        }
+    }
+    updateUserDetails=async (userId,name,about)=>{
+        try{
+            const user=await userModel.findById(userId);
+            if(!user){
+                throw new customError(400,"given the wrong credentials");
+            }
+            if(name&&name!="")user.name=name;
+            if(about&&about!="")user.about=about;
+            user.save();
+            return user;
+        }
+        catch(err){
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while updating the user");
+            }
+        }
+    }
+    updateUserPhoto=async (userId,photoPath,photoOriginalName,type)=>{
+        try{
+            const user=await userModel.findById(userId);
+            if(!user){
+                throw new customError(400,"given the wrong credentials");
+            }
+            if(type=="photo"){
+                user.photoPath=photoPath;
+                user.photoOriginalName=photoOriginalName;
+            }
+            else if(type=="banner"){
+                user.bannerPath=photoPath;
+                user.bannerOriginalName=photoOriginalName;
+            }
+            user.save();
+            return user;
+        }
+        catch(err){
+            if (err instanceof customError){
+                throw new customError(400,err.message);
+            }else{
+                throw new customError(400,"something went wrong while updating the user");
+            }
+        }
+    }
+      deleteUser= async (userId)=>{
+        try{
+            const user=await userModel.findByIdAndDelete(userId);
+            return user;
+        }catch(err){
+            throw new customError(400,"something went wrong while deleting the user");
+        }
+    }
 }

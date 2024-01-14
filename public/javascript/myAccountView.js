@@ -1,5 +1,30 @@
 
+var truncateStyles = {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '150px',
+    cursor: 'pointer'
+  };
 
+  var expandedStyles = {
+    whiteSpace: 'normal',
+    overflow: 'visible',
+    textOverflow: 'initial'
+  };
+
+  function applyStyles(element, styles) {
+    for (var property in styles) {
+      element.style[property] = styles[property];
+    }
+  }
+
+  function toggleText(element) {
+    var isExpanded = element.classList.toggle("expanded");
+    var styles = isExpanded ? expandedStyles : truncateStyles;
+    applyStyles(element, styles);
+  }
+  
 
 function createOrganisationModelSetter(){
     modalHeader.innerHTML=`<h1 class="modal-title fs-5" id="exampleModalLabel">Create the organisation</h1>
@@ -127,16 +152,21 @@ function getBoxData(i,r,d=''){
     }
     let box=`<div class="card me-1 mt-1 glass" aria-hidden="true" style="width:300px;">
                         <div class="card-body">
-                          <h5 class="card-title ">
-                            <span class="col-6">${i.companyName}</span>
-                          </h5>
-                          <p class="text-end">
-                            ${formatDate(i.time)}
-                          </p>
-                          <div class="d-flex">
-                          ${button}
-                          <a class="btn btn-primary  col-6 ${d} ms-2" href="/v/${r}?r=${i._id}">${type} page</a>\
-                          </div>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <img src="${i.companyPhoto}" style="width:100px;height:100px;border-radius:50%;object-fit: cover;" >
+                                </div>
+                                <div class="d-flex flex-column justify-content-around" style="color:  gray;">
+                                    <div class="h5" onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: pointer;">${i.companyName}</div>
+                                    <div class="h6" onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: pointer;">${i.companyAbout}</div>
+                                    <div class="h6" onclick="toggleText(this)" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: pointer;">${formatDate(i.time)}</div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex mt-3">
+                                ${button}
+                                <a class="btn btn-primary  col-6 ${d} ms-2" href="/v/${r}?r=${i._id}">${type} page</a>\
+                            </div>
                         </div>
                       </div>`;
     return box;

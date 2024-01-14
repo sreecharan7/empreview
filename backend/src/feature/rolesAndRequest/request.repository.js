@@ -47,9 +47,45 @@ export class requestRepository{
             throw new customError(400,"something went wrong while searching for user");
         }
     }
+    changeCompanyNameToCompanyId=async(companyName,companyId)=>{
+        try{
+            await requestModel.updateMany({companyId},{$set:{companyName}});
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while changing the name");
+        }
+    }
     dataOfUserRequests=async (userId)=>{
         try{
-            const roles=await requestModel.find({userId},{userId:0,"__v":0}).sort({ time: -1 });
+            const roles=await requestModel.aggregate([
+                {
+                    "$match":{userId:new ObjectId(userId)}
+                },
+                {
+                    "$sort":{ time: -1 }
+                },
+                {
+                    "$lookup": {
+                        from: 'companies',
+                        localField: 'companyId',
+                        foreignField: '_id',
+                        as: 'Data',
+                    }
+                },
+                {
+                    "$unwind":"$Data"
+                },
+                {
+                    "$project":{
+                        "_id":"$_id",
+                        "companyName":"$Data.companyName",
+                        "companyPhoto":"$Data.photoPath",
+                        "companyAbout":"$Data.about",
+                        "role":"$role",
+                        "time":"$time",
+                    }
+                },
+            ]);
             return roles;
         }
         catch(err){
@@ -113,6 +149,14 @@ export class requestRepository{
     deleteRequestByCompanyId=async (companyId)=>{
         try{
             await requestModel.deleteMany({companyId});
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while computing the id");
+        }
+    }
+    deleteRequestByUserId=async (userId)=>{
+        try{
+            await requestModel.deleteMany({userId});
         }
         catch(err){
             throw new customError(400,"something went wrong while computing the id");

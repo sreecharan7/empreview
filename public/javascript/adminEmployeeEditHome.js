@@ -1,5 +1,6 @@
-
 const commetBoxContainer = document.getElementById("commet-box-container");
+const permissionLink =document.getElementById("permission-link");
+const noOfCommentsInput=document.getElementById("no-of-comments-input");
 
 let data=[];
 
@@ -40,6 +41,7 @@ const pathSegments = pathname.split('/').filter(segment => segment !== '');
 
 const toWhomId = pathSegments[3];
 
+permissionLink.setAttribute("href",`/v/a/employee/${toWhomId}/addPermission`);
 
   function commentFencth(){
 
@@ -269,6 +271,29 @@ function deleteEmployee(element){
             }
             else{
                 modelMsgShower.innerHTML=`<div class="alert alert-danger" role="alert"> ${response["msg"]} </div>`;
+                alertToast(`${response["msg"]}`);
+            }
+        }
+    };
+    xhr.send(serializedData);
+}
+
+function changeNoOfrating(){
+    const data={
+        roleId:toWhomId,
+        noOfComments:noOfCommentsInput.value
+    };
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", `/api/rolesAndRequest/changeNoOfComments`, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    var serializedData = new URLSearchParams(data).toString();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            let response = JSON.parse(xhr.responseText);
+            if(xhr.status==200){
+                alertToast(`${response["msg"]}`);
+            }
+            else{
                 alertToast(`${response["msg"]}`);
             }
         }

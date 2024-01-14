@@ -208,4 +208,32 @@ export class companyRepository{
             throw new customError(400,"something went wrong while getting the company options");
         }
     }
+    changeAdminRole=async(roleId,companyId,method)=>{
+        try{
+            let company=await companyModel.findById(companyId);
+            if(!company){throw new customError(400,"Company not found with the company id");}
+            if(method=="+"){
+                let index=company.adminId.indexOf(roleId);
+                if(index==-1){company.adminId.push(roleId);}
+            }
+            else if(method=="-"){
+                let index=company.adminId.indexOf(roleId);
+                if(index==-1){return;}
+                company.adminId.splice(index,1);
+            }
+            await company.save();
+            return company;
+        }catch(err){
+            throw new customError(400,"something went wrong while changing the admin role");
+        }
+    }
+    deleteUserFromAllCompany=async (userId)=>{
+        try{
+            await companyModel.deleteMany({userId});
+        }catch(err){
+            throw new customError(400,"something went wrong while deleting the user from all company");
+        }
+    }
 }
+
+

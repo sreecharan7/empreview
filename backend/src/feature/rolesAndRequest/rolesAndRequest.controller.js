@@ -204,6 +204,12 @@ export class rolesAndRequestController{
             }
             const roleC=await this.rolesRepository.changeRole(roledIDC,newRole,companyId);
             if(roleC){
+                if(newRole=="employee"){
+                    await this.companyRepository.changeAdminRole(roledIDC,companyId,"-");
+                }
+                else{
+                    await this.companyRepository.changeAdminRole(roledIDC,companyId,"+");
+                }
                 res.json({status:true,msg:"sucessfuly changed role"});
             }else{
                 throw new customError(400,"please check the newRoleId or login details");
@@ -231,6 +237,82 @@ export class rolesAndRequestController{
                 res.json({status:true,msg:"sucessfuly deleted role"});
             }else{
                 throw new customError(400,"please check the newRoleId or login details");
+            }
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    DataOfEmployeeUsingCompanyIdAndpermissionGivenOne=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            const reqRoleId=req.query["r"];
+            //should handle when the admin is removed when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            const data1=await this.rolesRepository.DataOfEmployeeOfpermissionGivenOne(reqRoleId);
+            const data2=await this.rolesRepository.getDetaisOfEmployeesOfCommentersUsingCompanyId(companyId,reqRoleId);
+            if(!data1||!data2){
+                throw new customError(400,"please check the roleId or login details");
+            }
+
+            res.json({status:true,data:{allowedtoComment:data1.allowedtoComment,employees:data2}});
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    changePermissionOfEmployee=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            const reqRoleId=req.body["roleId"];
+            const allowedtoComment=req.body["allowedtoComment"];
+            const method=req.body["method"];
+            //should handle when the admin is removed when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            if(!reqRoleId||!allowedtoComment||!method||!isValidObjectId(reqRoleId)||!isValidObjectId(allowedtoComment)){
+                throw new customError(400,"please provide the roleId and allowedtoComment");
+            }
+            let roleC;
+            if(method=="add"){
+                roleC=await this.rolesRepository.addEmployeeChangePermission(reqRoleId,companyId,allowedtoComment);
+            }
+            else if(method=="remove"){
+                roleC=await this.rolesRepository.removeEmployeeChangePermission(reqRoleId,companyId,allowedtoComment);
+            }
+            if(roleC){
+                res.json({status:true,msg:"sucessfuly changed permission"});
+            }else{
+                throw new customError(400,"please check the roleId or login details");
+            }
+        }
+        catch(err){
+            next(err);
+        }
+    }
+    changenoOfCommentsAllowedbyAdmin=async (req,res,next)=>{
+        try{
+            const companyId=req.userData.companyId;
+            const role=req.userData.role;
+            const noOfComments=req.body["noOfComments"];
+            const reqRoleId=req.body["roleId"];
+            //should handle when the admin is removed when he is logined
+            if(!companyId&&!(role=="admin"||role=="both")){
+                throw new customError(400,"please provide the companyId, or you are no the admin");
+            }
+            if(!noOfComments||noOfComments<0){
+                throw new customError(400,"please provide the noOfComments");
+            }
+            const roleC=await this.rolesRepository.noOfCommentsAllowedChangeByAdmin(reqRoleId,companyId,noOfComments);
+            if(roleC){
+                res.json({status:true,msg:"sucessfuly changed no of comments allowed"});
+            }else{
+                throw new customError(400,"please check the roleId or login details");
             }
         }
         catch(err){

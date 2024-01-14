@@ -62,6 +62,7 @@ export class companyController{
 
             if(nameChange){
                 //change the company name in roles also
+                await this.requestRepository.changeCompanyNameToCompanyId(companyName,companyId);
                 await this.rolesRepository.changeCompanyNameToCompanyId(companyName,companyId);
             }
         }
