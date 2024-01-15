@@ -89,7 +89,7 @@ function getCommentData(){
                 dataComments=response["data"];
                 commentBox.innerHTML="";
                 if(dataComments.length==0){
-                    commentBox.innerHTML='<h3 class="text-center" style="width:600px" >There is no employee is asigned to you by admin</h3>';
+                    commentBox.innerHTML='<h3 class="text-center" >There is no employee is asigned to you by admin</h3>';
                 }
                 dataComments.forEach(i => {
                     commentBox.innerHTML+=boxMaker(i);
@@ -293,7 +293,7 @@ function commentFencth(){
 
 function CommentsBoxAdder(data){
     if(data.length==0){
-        commetBoxContainer.innerHTML=`<h5 class="text-center" style="width:600px" >There is no comment to show</h5>`;
+        commetBoxContainer.innerHTML=`<h5 class="text-center"  >There is no comment to show</h5>`;
         return;
     }
     commetBoxContainer.innerHTML='';

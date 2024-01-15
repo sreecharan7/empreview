@@ -117,6 +117,7 @@ function createSubmit(element){
                 inputBox.readonly=true;
                 textArea.disabled=true;
                 textArea.readonly=true;
+                getThedata();
             }
             else{
                 var box=`<div class="alert alert-danger" role="alert">${response["msg"]}</div>`

@@ -52,8 +52,7 @@ export class commentController{
             if(!roleObject){
                 throw new customError(400,"No role found with the given id");
             }
-
-            if(!(options.EachOtherComments||!roleObject.allowedtoComment.indexOf(toWhomRole._id)==-1)){
+            if(!(options.EachOtherComments||roleObject.allowedtoComment.includes(toWhomRole._id))){
                 throw new customError(400,"you are not allowed to comment on this role");
             }else{
                 if(await this.commentRepository.countTheCommentsOfUserToUser(roleId,toWhomId)>=roleObject.noOfCommentsAllowed){
@@ -190,5 +189,4 @@ export class commentController{
             next(err);
         }
     }
-
 }

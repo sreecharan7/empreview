@@ -1,3 +1,10 @@
 node_modules
+public/images/banners/* 
+!public/images/banners/.gitkeep
+public/images/company/*
+!public/images/company/.gitkeep
+public/images/photos/*
+!public/images/photos/.gitkeep
 public/others/*
+!public/others/.gitkeep
 logs.txt

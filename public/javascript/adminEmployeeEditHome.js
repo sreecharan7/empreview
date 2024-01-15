@@ -64,7 +64,7 @@ permissionLink.setAttribute("href",`/v/a/employee/${toWhomId}/addPermission`);
 
 function CommentsBoxAdder(data){
     if(data.length==0){
-        commetBoxContainer.innerHTML=`<h5 class="text-center" style="width:600px" >There is no comment to show</h5>`;
+        commetBoxContainer.innerHTML=`<h5 class="text-center"  >There is no comment to show</h5>`;
         return;
     }
     commetBoxContainer.innerHTML='';
