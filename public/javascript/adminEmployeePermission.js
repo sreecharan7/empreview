@@ -218,3 +218,5 @@ function searchGivenInput(keyword){
 }
 
 searchForm.addEventListener("submit",searchFormSubmission);
+
+alertToast("These are the employees who are working in the organisation. You can give permission to comment to the particular employee. to the now selected person (reload to show again)")
