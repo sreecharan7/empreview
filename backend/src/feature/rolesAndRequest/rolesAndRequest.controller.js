@@ -156,7 +156,7 @@ export class rolesAndRequestController{
                 req.userData.cookieData["role"]="both";
                 var token=jwt.sign(req.userData.cookieData, process.env.jwt);
                 res.cookie(process.env.cookieNameUserCredientails,token,{maxAge: parseInt(process.env.expoireOfCookieUserCredientails)});
-                res.json({status:true,msg:"sucessfuly changed admin to employee"});
+                res.json({status:true,msg:"sucessfuly changed admin to admin and employee"});
             }
             else{
                 throw new customError(400,"you may be aldready employee and admin , or roleid is in correct");

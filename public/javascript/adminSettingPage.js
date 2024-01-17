@@ -38,7 +38,7 @@ function deleteConfirm(element){
                 },2000);
             }
             else{
-                alertToast(err.msg);
+                alertToast(response.msg);
             }
         }
     };
