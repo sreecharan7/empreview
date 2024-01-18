@@ -41,7 +41,7 @@ function createOrganisationModelSetter(){
                 </div>
             </div>
             <div>
-            <a href="#" onclick="alert('**Once you create the organisation you will become the admin you will able add employee, you can use another email to join as employee, reload page to see changes**')">Know more!</a>
+            <a href="#" onclick="alert('**Once you create the organisation you will become the admin you will able add employee, you can change to admin and employee after creating the organisation, reload page to see changes**')">Know more!</a>
             </div>
     </div>`;
     modalFooter.innerHTML=`<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
