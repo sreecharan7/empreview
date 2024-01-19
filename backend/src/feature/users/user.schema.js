@@ -4,7 +4,7 @@ import bcrupt from "bcrypt";
 export const userSchema=mongoose.Schema({
     email:{type:"String",required:true,match:[/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,'Please enter a valid email'],index:true,unique:true},
     password:{type:"String",required:true},
-    name:{type:"String",required:true,index:true},
+    name:{type:"String",required:true},
     about:{type:"String",required:true},
     photoPath:{type:"String",required:true,default:"/website/default-photo.svg"},
     bannerPath:{type:"String",required:true,default:"default"},

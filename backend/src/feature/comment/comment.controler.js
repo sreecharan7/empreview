@@ -141,7 +141,6 @@ export class commentController{
                 throw new customError(400,"you are not allowed to update the comment");
             }
             const comment=await this.commentRepository.updateCommet(_id,rating,msg);
-            console.log(comment);
             if(comment){
                 await this.rolesRepository.increseOrDecreseTheRating(comment.toWhomId,rating,"-+",1,comment.rating);
                 res.status(200).json({status:true,msg:"comment updated successfully"});
