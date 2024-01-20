@@ -59,7 +59,7 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
                 </div>
                 <div id="signed-div" class="d-none d-flex">
                 <abbr title="account settings" class="initialism text-decoration-none" >
-                  <a href="/my-profile" class="text-decoration-none" style="color: rgb(188, 131, 131);">
+                  <a href="#" class="text-decoration-none" style="color: rgb(188, 131, 131);" onclick="myProileRedirect()">
                   <div class="me-4 hover">
                     <!-- Account settings -->
                     <i class="fa-solid fa-gear fa-xl"></i>
@@ -183,6 +183,9 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
 function alertToast(msg){
   toastBody.innerHTML=msg;
   toastBootstrap.show()
+}
+function myProileRedirect(){
+  window.location.replace(`/my-profile?from=${window.location.pathname}`);
 }
 
   signUpCheckUsingRequestToServer();

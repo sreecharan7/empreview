@@ -188,8 +188,6 @@ function getThedata(element){
         if (xhr.readyState == 4) {
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==200){
-                // console.log(response);
-                // let emptyText=''
                 if(element){
                     requestBox.innerHTML='';
                 }

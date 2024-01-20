@@ -177,7 +177,6 @@ export class rolesRepository{
             return employees;
         }
         catch(err){
-            console.log(err);
             throw new customError(400,"something went wrong while computing the employees")
         }
     }
@@ -218,7 +217,6 @@ export class rolesRepository{
             return employee;
         }
         catch(err){
-            console.log(err);
             throw new customError(400,"something went wrong while computing the employees")
         }
     }
@@ -304,7 +302,6 @@ export class rolesRepository{
             ]);
             return employees;
         }catch(err){
-            console.log(err);
             throw new customError(400,"something went wrong while getting the details of the employees");
         }
     }
@@ -356,7 +353,6 @@ export class rolesRepository{
             ]);
             return employees;
         }catch(err){
-            console.log(err);
             throw new customError(400,"something went wrong while getting the details of the employees");
         }
     }
@@ -388,7 +384,6 @@ export class rolesRepository{
             }
             await rolesModel.updateOne({_id:roleId},{$set:{rating:newRating,noOfRating}});
         }catch(err){
-            console.log(err);
             throw new customError(400,"something went wrong while changing the rating");
         }
     }
@@ -407,7 +402,6 @@ export class rolesRepository{
             return data;
         }
         catch(err){
-            console.log(err);
             throw new customError(400,"something went wrong while computing the roles")
         }
     }

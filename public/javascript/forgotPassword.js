@@ -29,7 +29,6 @@ function formSubmissionEmail(event){
         formData.set('email',email);
         emailForm=false;
     }
-    console.log(emailForm);
     //disabing the button
     const submitButton=this.querySelector(".btn");
     submitButton.disabled=true;
@@ -74,4 +73,12 @@ const emailI= urlParams.get("email");
 
 if(emailI&&emailInput&&emailInput[0]){
     emailInput[0].value=emailI;
+}
+if(urlParams.get("from")){
+    const backButton=document.getElementById("back-button");
+    backButton.href=urlParams.get("from");
+}
+if(urlParams.get("heading")){
+    const heading=document.getElementById("heading-of-page");
+    heading.innerHTML=urlParams.get("heading");
 }

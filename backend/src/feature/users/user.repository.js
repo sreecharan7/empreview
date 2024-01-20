@@ -89,7 +89,6 @@ export class userRepository{
             user.verified=emailVerified;
             user.save();
         }catch(err){
-            console.log(err);
             if (err instanceof customError){
                 throw new customError(400,err.message);
             }else{

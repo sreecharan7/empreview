@@ -181,6 +181,7 @@ function updateComment(element,id){
                 commentFencth();
             }
             else{
+                element.disabled=false;
                 modelMsgShower.innerHTML=`<div class="alert alert-danger" role="alert"> ${response["msg"]} </div>`;
                 alertToast(`${response["msg"]}`);
             }

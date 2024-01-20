@@ -21,6 +21,9 @@ export class commentController{
             if(!rating||!toWhomId||!isValidObjectId(toWhomId)){
                 throw new customError(400,"give the proper details");
             }
+            if(rating>5||rating<1){
+                throw new customError(400,"give the proper rating it should be between 1 to 5");
+            }
             const options = await this.companyRepository.getCompanyOptions(companyId);
 
             const toWhomRole=await this.rolesRepository.getRoleById(toWhomId);
@@ -128,7 +131,9 @@ export class commentController{
             if(!rating||!toWhomId||!isValidObjectId(toWhomId)){
                 throw new customError(400,"give the proper details");
             }
-
+            if(rating>5||rating<1){
+                throw new customError(400,"give the proper rating it should be between 1 to 5");
+            }
             const toWhomRole=await this.rolesRepository.getRoleById(toWhomId);
             if(!toWhomRole){
                 throw new customError(400,"No role found with the given id");
@@ -136,7 +141,6 @@ export class commentController{
             if(toWhomRole.companyId!=companyId){
                 throw new customError(400,"No role found with the given id");
             }
-            // console.log(toWhomRole);
             if(role!="admin"&&role!="both"){
                 throw new customError(400,"you are not allowed to update the comment");
             }

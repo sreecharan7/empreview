@@ -82,7 +82,6 @@ export class commentRepository{
             })
             return newComments;
         }catch(err){
-            console.log(err);
             throw new customError(400,"something went wrong while getting the comments");
         }
     }

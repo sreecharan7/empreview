@@ -8,3 +8,4 @@ public/images/photos/*
 public/others/*
 !public/others/.gitkeep
 logs.txt
+errors.txt

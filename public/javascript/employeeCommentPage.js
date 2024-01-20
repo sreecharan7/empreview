@@ -178,7 +178,6 @@ function changeToEmployee(id){
         bannerBlock.children[0].classList.remove('d-none');
         bannerBlock.children[1].classList.add('d-none');
         bannerBlock.children[0].children[0].src=d.banner;
-        console.log();
     }else{
         bannerBlock.children[1].classList.remove('d-none');
         bannerBlock.children[0].classList.add('d-none');
@@ -279,7 +278,6 @@ function commentFencth(){
         if (xhr.readyState == 4) {
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==200){
-                // console.log(response);
                 CommentsBoxAdder(response["data"]);
             }
             else{

@@ -173,7 +173,6 @@ var truncateStyles = {
         if (xhr.readyState == 4) {
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==200){
-                console.log("Sucess");
                 return true;
             }
             else{

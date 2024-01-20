@@ -31,7 +31,6 @@ export class userController {
             res.status(201).send({status:true,msg:"user created sucessfully"});
         }catch(err){
             next(err);
-            console.log(err);
         }
 
     }
@@ -46,7 +45,7 @@ export class userController {
         password=password.trim();
         const user=await this.userRepository.findUserByEmail(email);
         if(!user){
-            throw new customError(400,"user doesnot exist, check the email");
+            throw new customError(400,'user doesnot exist, check the email, please go for <a href="/signup">signup</a>');
         }
         if(!await bycrpt.compare(password,user.password)){
             throw new customError(400,"password was wrong");
@@ -58,7 +57,6 @@ export class userController {
         }
         catch(err){
             next(err);
-            console.log(err);
         }
     }
     logoutFromAllDevices=async (req,res,next)=>{

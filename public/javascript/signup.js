@@ -61,7 +61,6 @@ function formSubmission(event){
         if(xhr.readyState==4){
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==201){formData.get("email")
-                console.log("sucess");
                 var box=`<div class="alert alert-success" role="alert">${response["msg"]}. redirecting to login page...</div>`
                 wholePageMessageShower.innerHTML=box;
                 localStorage.setItem(`${formData.get("email")}`, `${formData.get("password")}`);
@@ -73,7 +72,6 @@ function formSubmission(event){
                     const passconf=document.getElementsByName("email");
                     emailError.innerHTML=response["email"];
                     passconf[0].classList.add("is-invalid");
-                    console.log(response);
                 }
                 else if(typeof(response["msg"])=="object"){
                     for(let a in response["msg"]){

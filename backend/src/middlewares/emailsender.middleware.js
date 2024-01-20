@@ -70,10 +70,8 @@ export const mailer=async (req,res,next)=>{
         };
         transporter.sendMail(mailOptions, function(error, info){
             if (error) {
-                console.log(error);
                 throw error;
             } else {
-                console.log('Email sent: ' + info.response);
                 res.status(200).json({message:"otp sent successfully, it will expire by 5 mintues"});
             }
         });

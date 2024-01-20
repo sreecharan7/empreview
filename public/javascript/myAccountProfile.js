@@ -183,3 +183,10 @@ function confrimPhotoSubmission(type){
     };
     xhr.send(formData);
 }
+
+const urlParams = new URLSearchParams(window.location.search);
+
+if(urlParams.get("from")){
+    const backButton=document.getElementById("back-button");
+    backButton.href=urlParams.get("from");
+}

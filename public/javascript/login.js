@@ -33,7 +33,6 @@ async function formSubmission(event){
         if (xhr.readyState == 4) {
             let response = JSON.parse(xhr.responseText);
             if(xhr.status==200){
-                console.log("sucess");
                 var box=`<div class="alert alert-success" role="alert">${response["msg"]}. redirecting to home page...</div>`
                 wholePageMessageShower.innerHTML=box;
                 setTimeout(function(){window.location.replace('/v');},2000)
@@ -67,7 +66,6 @@ if(email&&password&&emailInput&&passwordInput&&emailInput[0]&&passwordInput[0]){
 //a redirection to the forgot password
 
 function redirectionForgotPassword(){
-    // console.log(emailInput[0].value)
     if(emailInput[0].value){
         window.location.replace(`/forgot-password?email=${emailInput[0].value}`);
     }

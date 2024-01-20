@@ -12,7 +12,6 @@ export class companyRepository{
             return await newCompany;
         }
         catch(err){
-            console.log(err);
             throw new customError(400,"organisation name is is aldready exist , choose another");
         }
     }
