@@ -27,7 +27,7 @@ export function errorHandler(err, req, res, next) {
         errorLog = `Time: ${new Date().toISOString()}, StatusCode: ${err.statuscode}, Error: ${JSON.stringify(send)}, IP: ${req.ip}, URL: ${req.originalUrl}\n`;
     } else {
         res.status(500).send({status: false, msg: "something wrong with the server"});
-        errorLog = `Time: ${new Date().toISOString()}, StatusCode: 500, Error: something wrong with the server, IP: ${req.ip}, URL: ${req.originalUrl}\n`;
+        errorLog = `Time: ${new Date().toISOString()}, StatusCode: 500, Error: something wrong with the server, IP: ${req.ip}, URL: ${req.originalUrl},msg:${err.message}\ns`;
     }
 
     fs.appendFile('errors.txt', errorLog, (err) => {

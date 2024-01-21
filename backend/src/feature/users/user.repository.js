@@ -179,12 +179,26 @@ export class userRepository{
             }
         }
     }
-      deleteUser= async (userId)=>{
+    deleteUser= async (userId)=>{
         try{
             const user=await userModel.findByIdAndDelete(userId);
             return user;
         }catch(err){
             throw new customError(400,"something went wrong while deleting the user");
+        }
+    }
+    updateTheNotificationCount=async (userId,notificationCount)=>{
+        try{
+            const user=await userModel.findById(userId);
+            if(!user){
+                throw new customError(400,"given the wrong credentials");
+            }
+            if(notificationCount>=0)user.notificationCount+=notificationCount;
+            else user.notificationCount=0;
+            user.save();
+        }
+        catch(err){
+            throw new customError(400,"something went wrong while updating the user");
         }
     }
 }

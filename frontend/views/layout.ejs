@@ -38,6 +38,7 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
     </style>
   </head>
   <body>
+    
     <!-- navabar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #e3f2fd;">
         <div class="container-fluid ">
@@ -59,6 +60,17 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
                 </div>
                 <div id="signed-div" class="d-none d-flex">
                 <abbr title="account settings" class="initialism text-decoration-none" >
+                   <a class="text-decoration-none position-relative"  data-bs-toggle="offcanvas" href="#offcanvas" role="button" aria-controls="offcanvasExample" onclick="notificationFecth()">
+                  <div class="me-4 hover">
+                    <i class="fa-solid fa-bell fa-xl" style="color: #FFD43B;"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="margin-left: -15px;">
+                      99+
+                      <span class="visually-hidden">unread messages</span>
+                    </span>
+                  </div>
+                  </a>
+                </abbr>
+                <abbr title="account settings" class="initialism text-decoration-none" >
                   <a href="#" class="text-decoration-none" style="color: rgb(188, 131, 131);" onclick="myProileRedirect()">
                   <div class="me-4 hover">
                     <!-- Account settings -->
@@ -76,6 +88,8 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
           </div>
         </div>
     </nav>
+
+<!-- body -->
 
   <%-body%>
 
@@ -112,6 +126,46 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
   </div>
 </div>
 
+<!-- offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Notifications</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div id="offcanvas-body-data" style="height: 100%;">
+      <!-- <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="text-primary">loading...</p>
+      </div>
+    </div> -->
+
+
+      <div class="card text-bg-warning mb-3" style="max-width: 100%;">
+        <div class="card-header">Header</div>
+        <div class="card-body">
+          <h5 class="card-title">Warning card title</h5>
+          <p class="card-text"> content.</p>
+        </div>
+      </div>
+
+      <div class="card text-bg-light   mb-3" style="max-width: 100%;">
+        <div class="card-header d-flex justify-content-between">
+          heading
+          <button type="button" class="btn-close" onclick="removeNotificationBox()"></button>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Warning card title</h5>
+          <p class="card-text text-end"> 2024-01-18T12:14:48.937+00:00</p>
+        </div>
+      </div>
+
+      
+  </div>
+</div>
+</div>
 
 
 
@@ -122,6 +176,7 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
   var modalHeader=document.getElementById("modalHeader");
   var modalBody=document.getElementById("modalBody");
   var modalFooter=document.getElementById("modalFooter");
+  const offcanvasBodyData=document.getElementById("offcanvas-body-data");
   const toastLive= document.getElementById('liveToast');
   const toastBody=toastLive.querySelector("#toast-body");
   const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLive);
@@ -188,7 +243,103 @@ function myProileRedirect(){
   window.location.replace(`/my-profile?from=${window.location.pathname}`);
 }
 
-  signUpCheckUsingRequestToServer();
+signUpCheckUsingRequestToServer();
+
+let notificationData=[];
+
+function notificationFecth(){
+  var xhr = new XMLHttpRequest();
+    xhr.open('GET', `/api/notification/get`, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            let response = JSON.parse(xhr.responseText);
+            if(xhr.status==200){
+              notificationData=response.data;
+              noticationKeepTheData();
+            }
+            else{
+                noticationKeepTheData(response.msg);
+                alert(response.msg);
+            }
+        }
+    }
+    xhr.send();
+}
+
+function noticationKeepTheData(err){
+  if(err||notificationData.length==0){
+    // show there is no notification
+    offcanvasBodyData.innerHTML='<div class="d-flex flex-column justify-content-center align-items-center" style="height: 100%;"> <p class="text-primary">no notification</p></div>';
+    return;
+  }
+  offcanvasBodyData.innerHTML="";
+  notificationData.forEach(i=>{
+    offcanvasBodyData.innerHTML+=notificationBoxMaker(i);
+  });
+}
+
+function notificationBoxMaker(i){
+  var box=`      <div class="card text-bg-${i.read?"light":"warning"}   mb-3" style="max-width: 100%;" id="${i._id}">
+        <div class="card-header d-flex justify-content-between">
+          ${i.companyName}
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" onclick="removeNotificationBox('${i._id}',this)"></button>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">${i.msg}</h5>
+          <p class="card-text text-end">${formatDate(i.time,true)} </p>
+        </div>
+      </div>`;
+  return box;
+}
+
+function removeNotificationBox(id,element){
+  if(element){
+    element.parentElement.parentElement.remove();
+    //if is not found it will stop here only because of null error
+  }
+  else{
+    document.getElementById(id).remove();
+    //if is not found it will stop here only because of null error
+  }
+  notificationData=notificationData.filter(i=>i._id!=id);
+  if(notificationData.length==0){
+    offcanvasBodyData.innerHTML='<div class="d-flex flex-column justify-content-center align-items-center" style="height: 100%;"> <p class="text-primary">no notification</p></div>';
+  }
+  var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', `/api/notification/remove/${id}`, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            let response = JSON.parse(xhr.responseText);
+            if(xhr.status==200){
+            }
+            else{
+                alert(response.msg);
+            }
+        }
+    }
+    xhr.send(JSON.stringify({id:id}));
+}
+
+function formatDate(inputDate,dayShow=null) {
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  const dateObj = new Date(inputDate);
+  const day = dateObj.getUTCDate();
+  const monthIndex = dateObj.getUTCMonth();
+  const year = dateObj.getUTCFullYear();
+  const formattedDay = day < 10 ? `0${day}` : day;
+  if(dayShow){
+    return `${formattedDay} ${months[monthIndex]} ${year}`;
+  }
+  else{
+    return `${months[monthIndex]}-${year}`;
+  }
+}
+
+
 </script>
 
 

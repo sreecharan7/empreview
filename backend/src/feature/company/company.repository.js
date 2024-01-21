@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { companyschema } from "./company.schema.js";
 import { customError } from "../../middlewares/error.middleware.js";
+import {notificationRepository} from "../notifications/notifications.repository.js";
 
 const companyModel=mongoose.model("company",companyschema);
 
@@ -8,6 +9,7 @@ const companyModel=mongoose.model("company",companyschema);
 export class companyRepository{
     add=async (companyName,userId,about)=>{
         try{
+            notificationRepository.add(userId,"you have created a company",companyName);
             const newCompany=companyModel.create({companyName,userId,about});
             return await newCompany;
         }

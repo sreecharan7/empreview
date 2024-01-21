@@ -11,6 +11,7 @@ export const userSchema=mongoose.Schema({
     photoOriginalName:{type:"String",required:true,default:"default-photo.svg"},
     bannerOriginalName:{type:"String",required:true,default:"default-banner.png"},
     connectionId:{type:"Number",required:true,default:0},
+    notificationCount:{type:"Number",required:true,default:0},
     time:{type:"Date",required:true,default:Date.now()},
     verified:{type:"Boolean",required:true,default:false}
 })

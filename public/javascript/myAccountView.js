@@ -131,18 +131,7 @@ function createSubmit(element){
 }
 
 
-function formatDate(inputDate) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-  
-    const dateObj = new Date(inputDate);
-    const monthIndex = dateObj.getUTCMonth();
-    const year = dateObj.getUTCFullYear();
-  
-    return `${months[monthIndex]}-${year}`;
-}
+
 
 function getBoxData(i,r,d=''){
     let type="admin",button='';

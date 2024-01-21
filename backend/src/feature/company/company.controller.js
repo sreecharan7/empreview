@@ -3,6 +3,7 @@ import { companyRepository } from "./company.repository.js";
 import {rolesRepository} from "../rolesAndRequest/roles.repository.js";
 import { requestRepository } from "../rolesAndRequest/request.repository.js";
 import {requestToUserRepository} from "../requestToUser/requestToUser.repository.js";
+import { notificationRepository } from "../notifications/notifications.repository.js";
 
 const isValidObjectId = (id) => {
     const objectIdPattern = /^[0-9a-fA-F]{24}$/;  
@@ -16,6 +17,7 @@ export class companyController{
         this.rolesRepository=new rolesRepository();
         this.requestRepository=new requestRepository();
         this.requestToUserRepository=new requestToUserRepository();
+        this.notificationRepository=new notificationRepository();
     }
     getCompanyDetails=async (req,res,next)=>{
         try{
@@ -99,7 +101,7 @@ export class companyController{
     }
     deleteTheCompany=async(req,res,next)=>{
         try{
-            let {companyId,role,roleId,userId}=req.userData;
+            let {companyId,role,roleId,userId,companyName}=req.userData;
             if(!(companyId&&roleId&&role&&userId&&(role=="admin"||role=="both"))){
                 throw new customError(400,"check the roleid or you are not the admin");                
             }
@@ -107,6 +109,7 @@ export class companyController{
                 await this.rolesRepository.deleteRoleByCompanyId(companyId);
                 await this.requestRepository.deleteRequestByCompanyId(companyId);
                 await this.requestToUserRepository.deleteAllRequestRelatedToCompany(companyId);
+                await this.notificationRepository.add(userId,"company deleted successfully",companyName)
                 res.json({status:true,msg:"successfully deleted the company"});
             }else{
                 throw new customError(400,"something went wrong while deleting the company");
