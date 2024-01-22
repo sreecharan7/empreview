@@ -59,14 +59,15 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
                   <a class="btn btn-warning" href="/signup">Signup</a>
                 </div>
                 <div id="signed-div" class="d-none d-flex">
-                <abbr title="account settings" class="initialism text-decoration-none" >
+                <abbr title="notifications" class="initialism text-decoration-none" >
                    <a class="text-decoration-none position-relative"  data-bs-toggle="offcanvas" href="#offcanvas" role="button" aria-controls="offcanvasExample" onclick="notificationFecth()">
                   <div class="me-4 hover">
                     <i class="fa-solid fa-bell fa-xl" style="color: #FFD43B;"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="margin-left: -15px;">
-                      99+
-                      <span class="visually-hidden">unread messages</span>
+                    <%if(notifications){%>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="margin-left: -17px;">
+                      <%=notifications%>
                     </span>
+                    <%}%>
                   </div>
                   </a>
                 </abbr>
@@ -134,35 +135,15 @@ background: linear-gradient(to right bottom,rgba(255, 255, 255, 0.7),rgba(255, 2
   </div>
   <div class="offcanvas-body">
     <div id="offcanvas-body-data" style="height: 100%;">
-      <!-- <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+      
+      <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
         <p class="text-primary">loading...</p>
       </div>
-    </div> -->
+    </div>
 
-
-      <div class="card text-bg-warning mb-3" style="max-width: 100%;">
-        <div class="card-header">Header</div>
-        <div class="card-body">
-          <h5 class="card-title">Warning card title</h5>
-          <p class="card-text"> content.</p>
-        </div>
-      </div>
-
-      <div class="card text-bg-light   mb-3" style="max-width: 100%;">
-        <div class="card-header d-flex justify-content-between">
-          heading
-          <button type="button" class="btn-close" onclick="removeNotificationBox()"></button>
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Warning card title</h5>
-          <p class="card-text text-end"> 2024-01-18T12:14:48.937+00:00</p>
-        </div>
-      </div>
-
-      
   </div>
 </div>
 </div>

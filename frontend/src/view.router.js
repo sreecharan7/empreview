@@ -50,6 +50,6 @@ app.get("/v/e",(req,res,next)=>{
 
 app.get("/v/e/comment",authorization,(req,res,next)=>{viewC.employeeCommentPage(req,res,next);});
 
-app.use((req,res,next)=>{res.status(404).render("404",{javascript:null,title:"Page not found"})});
+app.use((req,res,next)=>{res.status(404).render("404",{javascript:null,title:"Page not found",notifications:null})});
 
 export default app;

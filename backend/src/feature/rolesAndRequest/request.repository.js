@@ -140,7 +140,7 @@ export class requestRepository{
     }
     deleteRequest=async (requestId)=>{
         try{
-            const request=await requestModel.deleteOne({_id:requestId});
+            const request=await requestModel.findByIdAndDelete(requestId);
             return request;
         }catch(err){
             throw new customError(400,"something went wrong while computing the id");

@@ -23,6 +23,7 @@ export async function authorization(req,res,next){
                 req.userData.role=data["role"];
                 req.userData.companyName=data["companyName"];
                 req.userData.roleId=data["roleId"];
+                req.userData.notificationCount=user["notificationCount"];
                 next();
             }
             else{

@@ -193,7 +193,7 @@ export class userRepository{
             if(!user){
                 throw new customError(400,"given the wrong credentials");
             }
-            if(notificationCount>=0)user.notificationCount+=notificationCount;
+            if(notificationCount>0)user.notificationCount+=notificationCount;
             else user.notificationCount=0;
             user.save();
         }

@@ -3,6 +3,7 @@ import { requestRepository } from "./request.repository.js";
 import { rolesRepository } from "./roles.repository.js";
 import { companyRepository } from "../company/company.repository.js";
 import { commentRepository } from "../comment/comment.repository.js";
+import { notificationRepository } from "../notifications/notifications.repository.js";
 
 import jwt from "jsonwebtoken";
 
@@ -18,6 +19,7 @@ export class rolesAndRequestController{
         this.rolesRepository=new rolesRepository();
         this.companyRepository=new companyRepository();
         this.commentRepository=new commentRepository();
+        this.notificationRepository=new notificationRepository();
     }
     addNewRole=async (req,res,next)=>{
         try{
@@ -32,6 +34,7 @@ export class rolesAndRequestController{
             let admin=await this.rolesRepository.addNewRole(role,userId,company._id,companyName);
             company.adminId.push(admin._id);
             company.save();
+            await this.notificationRepository.add(userId,"Created company sucessfully",companyName);
             res.status(201).send({status:true,msg:"created organisation sucessfully, you are the admin"});
         }
         else if(role==="employee"){
@@ -102,6 +105,7 @@ export class rolesAndRequestController{
             }
             const request=await this.requestRepository.getElementByIdAndDelete(requestId);
             await this.rolesRepository.changeRequestToRole(request);
+            await this.notificationRepository.add(request.userId,"Your request is accepted",request.companyName);
             res.json({status:true,msg:"sucessfuly cahnged request to role"});
         }catch(err){
             next(err);
@@ -119,7 +123,8 @@ export class rolesAndRequestController{
             if(!requestId){
                 throw  new customError(400,"please provide the requestId");
             }
-            await this.requestRepository.deleteRequest(requestId);
+            const request=await this.requestRepository.deleteRequest(requestId);
+            await this.notificationRepository.add(request.userId,"Your request is rejected",request.companyName);
             res.json({status:true,msg:"sucessfuly, remove the request"});
             
         }catch(err){
@@ -205,9 +210,11 @@ export class rolesAndRequestController{
             if(roleC){
                 if(newRole=="employee"){
                     await this.companyRepository.changeAdminRole(roledIDC,companyId,"-");
+                    await this.notificationRepository.add(roleC.userId,"Your role is changed to employee",roleC.companyName);
                 }
                 else{
                     await this.companyRepository.changeAdminRole(roledIDC,companyId,"+");
+                    await this.notificationRepository.add(roleC.userId,"Your role is changed to admin and employee",roleC.companyName);
                 }
                 res.json({status:true,msg:"sucessfuly changed role"});
             }else{
@@ -233,6 +240,7 @@ export class rolesAndRequestController{
             const roleC=await this.rolesRepository.deleteRole(roledIDC,companyId);
             if(roleC){
                 await this.commentRepository.deleteAllCommentsOfUser(roledIDC);
+                await this.notificationRepository.add(roleC.userId,"You were removed from the origination",roleC.companyName);
                 res.json({status:true,msg:"sucessfuly deleted role"});
             }else{
                 throw new customError(400,"please check the newRoleId or login details");
