@@ -5,7 +5,6 @@ const checkBox=document.getElementById("flexCheckDefault");
 const wholePageMessageShower=document.getElementById("message-shower");
 const emailInput=document.getElementsByName("email");
 const passwordInput=document.getElementsByName("password");
-const forgotPasswordLink=document.getElementById("forgot-password-link");
 
 async function formSubmission(event){
     event.preventDefault();
@@ -73,5 +72,3 @@ function redirectionForgotPassword(){
         window.location.replace(`/forgot-password`);
     }
 }
-
-forgotPasswordLink.addEventListener("click",redirectionForgotPassword);
