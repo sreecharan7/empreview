@@ -30,26 +30,26 @@ export async function authorization(req,res,next){
                 res.cookie(process.env.cookieNameUserCredientails,'',{expires:new Date(0)});
                 if(req["goNext"]){next();}
                 else{
-                    await res.render("access-denied",{title:"Acess denied",javascript:null})
+                    await res.render("access-denied",{title:"Acess denied",javascript:null,notifications:null})
                 }
             }
         }else{
             res.cookie(process.env.cookieNameUserCredientails,'',{expires:new Date(0)});
             if(req["goNext"]){next();}
             else{
-                await res.render("access-denied",{title:"Acess denied",javascript:null})
+                await res.render("access-denied",{title:"Acess denied",javascript:null,notifications:null})
             }
         }
         }
         else{
             if(req["goNext"]){next();}
             else{
-                await res.render("access-denied",{title:"Acess denied",javascript:null})
+                await res.render("access-denied",{title:"Acess denied",javascript:null,notifications:null})
             }
         }
     }
     catch(err){
         res.cookie(process.env.cookieNameUserCredientails,'',{expires:new Date(0)});
-        await res.render("access-denied",{title:"Acess denied",javascript:null})
+        await res.render("access-denied",{title:"Acess denied",javascript:null,notifications:null})
     }
 }
