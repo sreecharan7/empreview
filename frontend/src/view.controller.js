@@ -14,7 +14,7 @@ export class viewController{
 
     home=async (req,res,next)=>{
         try{
-            await res.render("home",{title:"Home",javascript:null,notifications:null});
+            await res.render("home",{title:"Home",javascript:null,notifications:null,css:``});
         }
         catch(err){
             next(err);

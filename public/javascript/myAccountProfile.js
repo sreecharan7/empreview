@@ -186,7 +186,7 @@ function confrimPhotoSubmission(type){
 
 const urlParams = new URLSearchParams(window.location.search);
 
-if(urlParams.get("from")){
+if(urlParams.get("from")&&urlParams.get("from")!="/my-profile"){
     const backButton=document.getElementById("back-button");
     backButton.href=urlParams.get("from");
 }
