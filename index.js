@@ -30,7 +30,7 @@ app.use("/",view);
 app.use(errorHandler);
 
 
-app.listen(process.env.port,()=>{
-    console.log("server is started at the",process.env.port);
+app.listen(process.env.PORT,()=>{
+    console.log("server is started at the",process.env.PORT);
     connect();
 })
