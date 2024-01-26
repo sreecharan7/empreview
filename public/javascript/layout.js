@@ -20,6 +20,10 @@
           siginDiv.children[0].classList.add("d-none");
           siginDiv.children[1].classList.remove("d-none");
         }
+        else{
+          siginDiv.children[0].classList.remove("d-none");
+          siginDiv.children[1].classList.add("d-none");
+        }
       }
   }
 
