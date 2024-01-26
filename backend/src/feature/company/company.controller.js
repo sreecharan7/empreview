@@ -82,7 +82,7 @@ export class companyController{
             if(!(companyId&&roleId&&role&&(role=="admin"||role=="both"))){
                 throw new customError(400,"check the roleid or you are not the admin");                
             }
-            let photoPath="\\"+photo.path.replace(/^public\\/, '');
+            let photoPath=photo.path.replace("public", '');
             let photoName=photo.originalname;
             await this.companyRepository.updateTheCompanyPhoto(companyId,roleId,photoPath,photoName);
             res.json({status:true,msg:"successfully changed the photo"});
