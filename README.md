@@ -31,9 +31,6 @@
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-* [Usage](#usage)
-* [Roadmap](#roadmap)
-* [Contributing](#contributing)
 
 
 <br>
@@ -127,53 +124,49 @@ npm install npm@latest -g
 ```
 * Mongo db [download](https://www.mongodb.com/try/download/community) (optional if you have Mongo db Atlas URL)
 
-### Installation
- 
-1. Clone the repo
-```sh
-git clone https://github.com/sreecharan7/empreview.git
-```
-2. Install NPM packages
-```sh
-npm install
-```
-3. 
+## Installation
+
+1. **Clone the Repository**
+    ```sh
+    git clone https://github.com/sreecharan7/empreview.git
+    ```
+
+2. **Install NPM Packages**
+    ```sh
+    cd empreview
+    npm install
+    ```
+
+3. **Configure Environment Variables**
+    Change the environment variables according to your requirements. The most important ones are `mongodb url`, `email`, `emailpass`, and `base url`.
+4. **Run the Project**
+    ```sh
+    node index
+    ```
+
+### For Docker
+
+1. **Configure Docker Environment Variables**
+    After cloning, change the environment variables, especially `mongodburl`. Optional for `email`, `emailpass`, and `base url`.
+
+2. **Create Docker Volume**
+    ```sh
+    docker volume create empreview_data
+    ```
+
+3. **Build the Docker Image**
+    ```sh
+    cd empreview
+    docker build -t empreview .
+    ```
+
+4. **Create and Run Docker Container**
+    ```sh
+    docker run -it -d -p 4000:4000 -e PORT=4000 -v empreview_data:/app/public empreview
+    ```
+    **Note:** Make sure to change the port used in the environment variable if needed.
 
 
+### Enjoy the Website!
 
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-See the [open issues](https://github.com/csivitu/Template/issues) for a list of proposed features (and known issues).
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'feat: Add some AmazingFeature'`)
-4. Push to the Branch (`git push -u origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-You are requested to follow the contribution guidelines specified in [CONTRIBUTING.md](./CONTRIBUTING.md) while contributing to the project :smile:.
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.
-
-
-
+Visit [http://localhost:4000](http://localhost:4000) in your web browser to access the website.
