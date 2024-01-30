@@ -47,7 +47,7 @@ This project involves the development of an Employee Rating System with a pletho
 
 ### Employee Ratings
 
-- **Private Comments**: Users can add private comments during the rating process.
+- **Private Comments**: Admins can control the comments to show comments without name.
 - **Comment Visibility Control**: Admins can set rules for displaying or hiding comments.
 - **Multi-Company Presence**: An employee can be associated with multiple companies.
 
